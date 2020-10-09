@@ -4,10 +4,11 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @IgnoreExtraProperties
 public class User {
-    private int uid;
+    private String uid;
     private String username, password, email, facebookid, gpslocation;
     private int num_ratings;
     private double rating;
@@ -32,11 +33,11 @@ public class User {
         this.chathistory_ids = chathistory_ids;
     }
 
-    public int getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
