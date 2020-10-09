@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "383902398675",
+    "firebase_url": "https://market-swipe.firebaseio.com",
+    "project_id": "market-swipe",
+    "storage_bucket": "market-swipe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383902398675:android:c34c910b5d44219aeb7c26",
+        "android_client_info": {
+          "package_name": "com.example.marketswipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383902398675-34f5fjo29pro8uphihm2jkdr501pfnui.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.marketswipe",
+            "certificate_hash": "6ab7db942f4501a5eb287d63f0b0d41e24ab85b5"
+          }
+        },
+        {
+          "client_id": "383902398675-g3t3pnlhrk5out34cc89nv2hhstq01v0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdiqDYlkmDQshI1evYWSMaewm88Eqpigg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383902398675-g3t3pnlhrk5out34cc89nv2hhstq01v0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
