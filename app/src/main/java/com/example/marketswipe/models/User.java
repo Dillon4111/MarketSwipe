@@ -2,26 +2,19 @@ package com.example.marketswipe.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 @IgnoreExtraProperties
 public class User {
     private String uid;
     private String username, password, email, facebookid, gpslocation;
     private int num_ratings;
     private double rating;
-    private List<Integer> product_ids = new ArrayList<Integer>();
-    private List<Integer> chathistory_ids = new ArrayList<Integer>();
 
 
     public User() {
     }
 
     public User(String username, String password, String email, String facebookid,
-                String gpslocation, int num_ratings, double rating, List<Integer> product_ids,
-                List<Integer> chathistory_ids) {
+                String gpslocation, int num_ratings, double rating) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -29,8 +22,6 @@ public class User {
         this.gpslocation = gpslocation;
         this.num_ratings = num_ratings;
         this.rating = rating;
-        this.product_ids = product_ids;
-        this.chathistory_ids = chathistory_ids;
     }
 
     public String getUid() {
@@ -97,19 +88,4 @@ public class User {
         this.rating = rating;
     }
 
-    public List<Integer> getProduct_ids() {
-        return product_ids;
-    }
-
-    public void setProduct_ids(List<Integer> product_ids) {
-        this.product_ids = product_ids;
-    }
-
-    public List<Integer> getChathistory_ids() {
-        return chathistory_ids;
-    }
-
-    public void setChathistory_ids(List<Integer> chathistory_ids) {
-        this.chathistory_ids = chathistory_ids;
-    }
 }
