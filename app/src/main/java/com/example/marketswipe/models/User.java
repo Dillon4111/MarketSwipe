@@ -5,7 +5,10 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class User {
     private String uid;
-    private String username, password, email, facebookid, gpslocation;
+    private String username;
+    private String email;
+    private String facebookid;
+    private String gpslocation;
     private int num_ratings;
     private double rating;
 
@@ -13,15 +16,9 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String email, String facebookid,
-                String gpslocation, int num_ratings, double rating) {
+    public User(String username, String email) {
         this.username = username;
-        this.password = password;
         this.email = email;
-        this.facebookid = facebookid;
-        this.gpslocation = gpslocation;
-        this.num_ratings = num_ratings;
-        this.rating = rating;
     }
 
     public String getUid() {
@@ -38,14 +35,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {

@@ -3,6 +3,8 @@ package com.example.marketswipe.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,29 +41,44 @@ public class SignInActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.signInButton);
         orSignInText = findViewById(R.id.orRegisterText);
 
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
-        //update ui with current user
-        //updateUI(currentUser);
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = signInEmail.getText().toString();
                 String password = signInPassword.getText().toString();
 
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d("Register", "createUserWithEmail:success");
-                                    mUser = mAuth.getCurrentUser();
-                                } else {
-                                    Log.w("Register", "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                if(email.matches("") || password.matches("")){
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(SignInActivity.this);
+
+                    dlgAlert.setMessage("Please fill in both fields");
+                    dlgAlert.setTitle("Hold up!");
+                    dlgAlert.setPositiveButton("OK", null);
+                    dlgAlert.setCancelable(true);
+                    dlgAlert.create().show();
+
+                    dlgAlert.setPositiveButton("Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
                                 }
-                            }
-                        });
+                            });
+                }
+                else {
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(SignInActivity.this, "User signed in",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.w("MySignin", "SignInUserWithEmail:failure", task.getException());
+                                        Toast.makeText(SignInActivity.this, "Authentication failed",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
             }
         });
 
@@ -74,13 +91,4 @@ public class SignInActivity extends AppCompatActivity {
          }
      });
     }
-
-//    private void writeNewUser(String userId) {
-//        List<Integer> product_ids = new ArrayList<>();
-//        List<Integer> chathistory_ids = new ArrayList<>();
-//        User user = new User("Dillon Rochford", "password", "dillon@email", "fb_id",
-//                "12.123.1212.12", 5, 3.5, product_ids, chathistory_ids );
-//
-//        mDatabase.child("users").child(userId).setValue(user);
-//    }
 }
