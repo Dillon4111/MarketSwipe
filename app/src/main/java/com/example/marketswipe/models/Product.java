@@ -4,22 +4,25 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Product {
-    private int id, user_id, category_id, onlineprice_id;
-    private String name, description;
+    private int id;
+    private int user_id;
+    private int onlineprice_id;
+    private String name, description, category, sub_category;
     private double price;
+    //PICTURES
 
     public Product() {
     }
 
-    public Product(int id, int user_id, int category_id, int onlineprice_id,
-                   String name, String description, double price) {
+    public Product(int id, int user_id, String name, String description, double price,
+                   String category, String sub_category) {
         this.id = id;
         this.user_id = user_id;
-        this.category_id = category_id;
-        this.onlineprice_id = onlineprice_id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.category = category;
+        this.sub_category = sub_category;
     }
 
     public int getId() {
@@ -36,14 +39,6 @@ public class Product {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
-    }
-
-    public int getCategory_id() {
-        return category_id;
-    }
-
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
     }
 
     public int getOnlineprice_id() {
@@ -76,5 +71,21 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getSub_category() {
+        return sub_category;
+    }
+
+    public void setSub_category(String sub_category) {
+        this.sub_category = sub_category;
     }
 }

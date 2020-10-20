@@ -26,7 +26,7 @@ public class SignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private EditText signInEmail, signInPassword;
-    private Button registerButton;
+    private Button signInButton;
     private TextView orSignInText;
 
     private Button testProduct;
@@ -36,23 +36,23 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        testProduct = findViewById(R.id.testAddProduct);
-        testProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, AddProductActivity.class);
-                startActivity(intent);
-            }
-        });
+//        testProduct = findViewById(R.id.testAddProduct);
+//        testProduct.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(SignInActivity.this, AddProductActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         mAuth = FirebaseAuth.getInstance();
 
         signInEmail = findViewById(R.id.signInEmail);
         signInPassword = findViewById(R.id.signInPassword);
-        registerButton = findViewById(R.id.signInButton);
+        signInButton = findViewById(R.id.signInButton);
         orSignInText = findViewById(R.id.orRegisterText);
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = signInEmail.getText().toString();
@@ -82,6 +82,8 @@ public class SignInActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(SignInActivity.this, "User signed in",
                                                 Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(SignInActivity.this, AddProductActivity.class);
+                                        startActivity(intent);
                                     } else {
                                         Log.w("MySignin", "SignInUserWithEmail:failure", task.getException());
                                         Toast.makeText(SignInActivity.this, "Authentication failed",
