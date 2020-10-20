@@ -19,6 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.marketswipe.R;
+import com.example.marketswipe.models.Product;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +35,9 @@ import java.util.List;
 
 public class AddProductActivity extends AppCompatActivity {
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private DatabaseReference db;
     private DatabaseReference categoriesDB, subCategoriesDB;
     private Spinner catSpinner, subCatSpinner;
     private List<String> categories, subCategories;
@@ -186,7 +194,33 @@ public class AddProductActivity extends AppCompatActivity {
         addProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db= FirebaseDatabase.getInstance().getReference();
+                mAuth = FirebaseAuth.getInstance();
+                mUser = mAuth.getCurrentUser();
+                String uid = mUser.getUid();
+                String productName = editName.getText().toString();
+                String productPrice = editPrice.getText().toString();
+                double priceDouble = Double.parseDouble(productPrice);
+                String productDescription = editDescription.getText().toString();
+                String productCategory = catSpinner.getSelectedItem().toString();
+                String productSubCategory = subCatSpinner.getSelectedItem().toString();
 
+                Product product = new Product(uid, productName, productDescription, priceDouble,
+                        productCategory, productSubCategory);
+                db.child("Products").push().setValue(product)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(AddProductActivity.this, "Product added",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(AddProductActivity.this, "Write to db failed", Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
     }

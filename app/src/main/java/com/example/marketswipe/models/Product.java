@@ -4,8 +4,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Product {
-    private int id;
-    private int user_id;
+    private String id;
+    private String user_id;
     private int onlineprice_id;
     private String name, description, category, sub_category;
     private double price;
@@ -14,9 +14,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, int user_id, String name, String description, double price,
+    public Product(String user_id, String name, String description, double price,
                    String category, String sub_category) {
-        this.id = id;
         this.user_id = user_id;
         this.name = name;
         this.description = description;
@@ -25,19 +24,19 @@ public class Product {
         this.sub_category = sub_category;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 

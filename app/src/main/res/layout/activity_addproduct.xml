@@ -93,12 +93,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="101dp"
             android:layout_marginLeft="101dp"
-            android:layout_marginTop="517dp"
+            android:layout_marginTop="504dp"
+            android:layout_marginEnd="102dp"
+            android:layout_marginRight="102dp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Description"
             android:inputType="textMultiLine"
             android:maxLength="250"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -106,14 +110,15 @@
             android:id="@+id/counter"
             android:layout_width="60dp"
             android:layout_height="18dp"
-            android:layout_marginTop="541dp"
-            android:layout_marginEnd="104dp"
-            android:layout_marginRight="104dp"
+            android:layout_marginStart="318dp"
+            android:layout_marginLeft="318dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginRight="34dp"
             android:text="0/250"
+            app:layout_constraintBaseline_toBaselineOf="@+id/editDescription"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/editDescription"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/addProductButton"
@@ -121,13 +126,28 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="162dp"
             android:layout_marginLeft="162dp"
-            android:layout_marginTop="632dp"
+            android:layout_marginTop="704dp"
             android:layout_marginEnd="162dp"
             android:layout_marginRight="162dp"
             android:text="Enter"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="83dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="165dp"
+            android:layout_marginLeft="165dp"
+            android:layout_marginTop="599dp"
+            android:layout_marginEnd="164dp"
+            android:layout_marginRight="164dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

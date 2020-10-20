@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
     private EditText signInEmail, signInPassword;
     private Button signInButton;
     private TextView orSignInText;
@@ -55,7 +54,7 @@ public class SignInActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = signInEmail.getText().toString();
+                String email = signInEmail.getText().toString().trim();
                 String password = signInPassword.getText().toString();
 
                 if(email.matches("") || password.matches("")){
