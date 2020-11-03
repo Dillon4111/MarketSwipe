@@ -56,6 +56,7 @@ import java.util.UUID;
 
 public class AddProductActivity extends AppCompatActivity {
 
+    private boolean imageUploadSuccess;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private DatabaseReference db;
@@ -271,25 +272,28 @@ public class AddProductActivity extends AppCompatActivity {
                     String productCategory = catSpinner.getSelectedItem().toString();
                     String productSubCategory = subCatSpinner.getSelectedItem().toString();
 
-                    uploadImages();
-
-                    Product product = new Product(uid, productName, productDescription, priceDouble,
-                            productCategory, productSubCategory, images);
-                    db.child("Products").push().setValue(product)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(AddProductActivity.this, "Product added",
-                                            Toast.LENGTH_LONG).show();
-                                    uploadImages();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(AddProductActivity.this, "Write to db failed", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                    if (!uploadImages()) {
+                        Toast.makeText(AddProductActivity.this, "Cancelled, image upload error. Try again",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Product product = new Product(uid, productName, productDescription, priceDouble,
+                                productCategory, productSubCategory, images);
+                        db.child("Products").push().setValue(product)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(AddProductActivity.this, "Product added",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(AddProductActivity.this, "Write to db failed", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                    }
                 }
             }
         });
@@ -377,7 +381,8 @@ public class AddProductActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadImages() {
+    public boolean uploadImages() {
+        imageUploadSuccess = true;
         if (uriList != null) {
             images = new ArrayList<>();
             for (Uri uri : uriList) {
@@ -389,7 +394,7 @@ public class AddProductActivity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-
+                                imageUploadSuccess = false;
                                 // Error, Image not uploaded
                                 Toast
                                         .makeText(AddProductActivity.this,
@@ -416,6 +421,7 @@ public class AddProductActivity extends AppCompatActivity {
                 images.add(ref.getPath());
             }
         }
+        return imageUploadSuccess;
     }
 }
 

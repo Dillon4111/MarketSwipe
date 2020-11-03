@@ -1,19 +1,31 @@
 package com.example.marketswipe.activities;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.marketswipe.R;
-import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.example.marketswipe.models.Card;
+import com.example.marketswipe.models.Product;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.mindorks.placeholderview.SwipeDecor;
+import com.mindorks.placeholderview.SwipePlaceHolderView;
 
 import java.util.ArrayList;
-
-
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
 
 //        imageView = findViewById(R.id.productImage);
 //
@@ -31,78 +43,113 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-    private ArrayList<String> al;
-    private ArrayAdapter<String> arrayAdapter;
-    private int i;
+public class MainActivity extends AppCompatActivity {
+
+    private SwipePlaceHolderView mSwipeView;
+    private Context mContext;
+    private DatabaseReference productsDB;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private List<Product> productList = new ArrayList<>();
+    private List<Bitmap> productCoverPhotos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        al = new ArrayList<>();
-        al.add("php");
-        al.add("c");
-        al.add("python");
-        al.add("java");
-        al.add("html");
-        al.add("c++");
-        al.add("css");
-        al.add("javascript");
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.card, R.id.productCardImage, al );
+//        storageReference.child("/images/0ae4a5a4-f762-44b2-88f8-7a0a6f8c79cc")
+//                .getBytes(Long.MAX_VALUE)
+//                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                // Use the bytes to display the image
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                //imageView.setImageBitmap(bitmap);
+//                mSwipeView.addView(new Card(mContext, bitmap, mSwipeView));
+//            }
+//        });
 
-        SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
-
-        flingContainer.setAdapter(arrayAdapter);
-        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
+        productsDB = FirebaseDatabase.getInstance().getReference("Products");
+        productsDB.addValueEventListener(new ValueEventListener() {
             @Override
-            public void removeFirstObjectInAdapter() {
-                // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                Log.d("LIST", "removed object!");
-                al.remove(0);
-                arrayAdapter.notifyDataSetChanged();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count = 0;
+
+                do
+                for (DataSnapshot productSnapshot : snapshot.getChildren()) {
+                    Product p = productSnapshot.getValue(Product.class);
+                    productList.add(p);
+                    Log.d("Product Snapshot", productSnapshot.getValue().toString());
+                    Log.d("Product image 1", p.getImages().get(0));
+
+                    storageReference.child(p.getImages().get(0))
+                            .getBytes(Long.MAX_VALUE)
+                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    // Use the bytes to display the image
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    //imageView.setImageBitmap(bitmap);
+                                    productCoverPhotos.add(bitmap);
+                                    Log.d("Product bitmap", bitmap.toString());
+                                }
+                            });
+                    count++;
+                }
+                while (count < 3);
             }
 
             @Override
-            public void onLeftCardExit(Object dataObject) {
-                //Do something on the left!
-                //You also have access to the original object.
-                //If you want to use it just cast it (String) dataObject
-                Toast.makeText(MainActivity.this, "Left", Toast.LENGTH_SHORT).show();
-            }
+            public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onRightCardExit(Object dataObject) {
-                Toast.makeText(MainActivity.this, "Right", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                // Ask for more data here
-                al.add("XML ".concat(String.valueOf(i)));
-                arrayAdapter.notifyDataSetChanged();
-                Log.d("LIST", "notified");
-                i++;
-            }
-
-            @Override
-            public void onScroll(float scrollProgressPercent) {
-//                View view = flingContainer.getSelectedView();
-//                view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
-//                view.findViewById(R.id.item_swipe_left_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
             }
         });
 
+        mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
+        mContext = getApplicationContext();
 
-        // Optionally add an OnItemClickListener
-        flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+        mSwipeView.getBuilder()
+                .setDisplayViewCount(3)
+                .setSwipeDecor(new SwipeDecor()
+                        .setPaddingTop(20)
+                        .setRelativeScale(0.01f));
+//                        .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
+//                        .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
+
+
+//        for(Profile profile : Utils.loadProfiles(this.getApplicationContext())){
+//            mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
+//        }
+
+
+//        for (Bitmap bitmap : productCoverPhotos) {
+//            mSwipeView.addView(new Card(mContext, bitmap, mSwipeView));
+//            Log.d("Product bitmap", bitmap.toString());
+//        }
+
+
+        findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClicked(int itemPosition, Object dataObject) {
-                Toast.makeText(MainActivity.this, "Click", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+//                mSwipeView.doSwipe(false);
+                int count = 0;
+                for (Bitmap bitmap : productCoverPhotos) {
+                    mSwipeView.addView(new Card(mContext, productList.get(count), bitmap, mSwipeView));
+                    Log.d("Product bitmap", bitmap.toString());
+                    count++;
+                }
             }
         });
 
+        findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSwipeView.doSwipe(true);
+            }
+        });
     }
-
 }
