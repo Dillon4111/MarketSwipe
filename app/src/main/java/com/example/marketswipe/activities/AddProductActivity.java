@@ -2,7 +2,9 @@ package com.example.marketswipe.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -41,11 +43,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AddProductActivity extends AppCompatActivity {
 
@@ -58,18 +65,26 @@ public class AddProductActivity extends AppCompatActivity {
     private TextView counter;
     private EditText editName, editPrice, editDescription;
     private Button addProductButton, chooseImagesButton;
+    private List<Uri> uriList;
+    private List<String> images;
+    private List<ImageView> imageViews;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addproduct);
 
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         catSpinner = findViewById(R.id.cat_spinner);
         subCatSpinner = findViewById(R.id.subcat_spinner);
         categories = new ArrayList<String>();
-        categories.add("Select Category...");
+        categories.add("*Select Category...");
         subCategories = new ArrayList<String>();
-        subCategories.add("Select Sub-Category...");
+        subCategories.add("*Select Sub-Category...");
 
         categoriesDB = FirebaseDatabase.getInstance().getReference("Categories");
         categoriesDB.addValueEventListener(new ValueEventListener() {
@@ -120,13 +135,12 @@ public class AddProductActivity extends AppCompatActivity {
             }
         });
 
-        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
                     subCategories.clear();
-                    subCategories.add("Select Sub-Category...");
+                    subCategories.add("*Select Sub-Category...");
                     String selectedCategory = "Categories/" + parent.getItemAtPosition(position).toString();
                     //String selectedCategory = "Categories/" +
                     //       catSpinner.getSelectedItem().toString();
@@ -205,11 +219,12 @@ public class AddProductActivity extends AppCompatActivity {
         };
         editDescription.addTextChangedListener(mTextEditorWatcher);
 
+
         chooseImagesButton = findViewById(R.id.chooseImagesButton);
         chooseImagesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ActivityCompat.checkSelfPermission(AddProductActivity.this,
+                if (ActivityCompat.checkSelfPermission(AddProductActivity.this,
                         Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions(AddProductActivity.this,
@@ -228,7 +243,7 @@ public class AddProductActivity extends AppCompatActivity {
         addProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db= FirebaseDatabase.getInstance().getReference();
+                db = FirebaseDatabase.getInstance().getReference();
                 mAuth = FirebaseAuth.getInstance();
                 mUser = mAuth.getCurrentUser();
                 String uid = mUser.getUid();
@@ -236,25 +251,46 @@ public class AddProductActivity extends AppCompatActivity {
                 String productPrice = editPrice.getText().toString();
                 double priceDouble = Double.parseDouble(productPrice);
                 String productDescription = editDescription.getText().toString();
-                String productCategory = catSpinner.getSelectedItem().toString();
-                String productSubCategory = subCatSpinner.getSelectedItem().toString();
 
-                Product product = new Product(uid, productName, productDescription, priceDouble,
-                        productCategory, productSubCategory);
-                db.child("Products").push().setValue(product)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(AddProductActivity.this, "Product added",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(AddProductActivity.this, "Write to db failed", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                if (productName.matches("") || catSpinner.getSelectedItemPosition() == 0 ||
+                        productPrice.matches("") || subCatSpinner.getSelectedItemPosition() == 0) {
+
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(AddProductActivity.this);
+                    dlgAlert.setMessage("Please fill in required fields(*)");
+                    dlgAlert.setTitle("Hold Up!");
+                    dlgAlert.setPositiveButton("OK", null);
+                    dlgAlert.setCancelable(true);
+                    dlgAlert.create().show();
+                    dlgAlert.setPositiveButton("Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                } else {
+                    String productCategory = catSpinner.getSelectedItem().toString();
+                    String productSubCategory = subCatSpinner.getSelectedItem().toString();
+
+                    uploadImages();
+
+                    Product product = new Product(uid, productName, productDescription, priceDouble,
+                            productCategory, productSubCategory, images);
+                    db.child("Products").push().setValue(product)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(AddProductActivity.this, "Product added",
+                                            Toast.LENGTH_LONG).show();
+                                    uploadImages();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(AddProductActivity.this, "Write to db failed", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                }
             }
         });
     }
@@ -263,17 +299,30 @@ public class AddProductActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1 && resultCode == RESULT_OK){
-            final ImageView imageView = findViewById(R.id.imageView);
-            Zoomy.Builder builder = new Zoomy.Builder(this).target(imageView);
-            builder.register();
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            final ImageView imageView1 = findViewById(R.id.imageView);
+            final ImageView imageView2 = findViewById(R.id.imageView2);
+            final ImageView imageView3 = findViewById(R.id.imageView3);
+            final ImageView imageView4 = findViewById(R.id.imageView4);
+            imageViews = new ArrayList<>();
+            imageViews.add(imageView1);
+            imageViews.add(imageView2);
+            imageViews.add(imageView3);
+            imageViews.add(imageView4);
+            for (ImageView imageView : imageViews) {
+                Zoomy.Builder builder = new Zoomy.Builder(this).target(imageView);
+                builder.register();
+            }
+
             final List<Bitmap> bitmaps = new ArrayList<>();
             ClipData clipData = data.getClipData();
+            uriList = new ArrayList<>();
 
-            if(clipData != null) {
+            if (clipData != null) {
 
-                for(int i = 0; i < clipData.getItemCount(); i++) {
+                for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri imageUri = clipData.getItemAt(i).getUri();
+                    uriList.add(imageUri);
                     try {
                         InputStream is = getContentResolver().openInputStream(imageUri);
 
@@ -284,11 +333,10 @@ public class AddProductActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-            }
-            else {
+            } else {
 
                 Uri imageUri = data.getData();
-
+                uriList.add(imageUri);
                 try {
                     InputStream is = getContentResolver().openInputStream(imageUri);
 
@@ -300,28 +348,73 @@ public class AddProductActivity extends AppCompatActivity {
                 }
             }
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+            for (int i = 0; i < bitmaps.size(); i++) {
+                imageViews.get(i).setImageBitmap(bitmaps.get(i));
+            }
 
-                    for(final Bitmap b : bitmaps) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    for (final Bitmap b : bitmaps) {
+//
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                                imageView1.setImageBitmap(b);
+//                            }
+//                        });
+//
+//                        try {
+//                            Thread.sleep(3000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }).start();
+        }
+    }
 
-                        runOnUiThread(new Runnable() {
+    public void uploadImages() {
+        if (uriList != null) {
+            images = new ArrayList<>();
+            for (Uri uri : uriList) {
+                StorageReference ref
+                        = storageReference
+                        .child("images/" + UUID.randomUUID().toString());
+
+                ref.putFile(uri)
+                        .addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void run() {
+                            public void onFailure(@NonNull Exception e) {
 
-                                imageView.setImageBitmap(b);
+                                // Error, Image not uploaded
+                                Toast
+                                        .makeText(AddProductActivity.this,
+                                                "Failed " + e.getMessage(),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                             }
-                        });
+                        })
+                        .addOnProgressListener(
+                                new OnProgressListener<UploadTask.TaskSnapshot>() {
 
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }).start();
+                                    // Progress Listener for loading
+                                    // percentage on the dialog box
+                                    @Override
+                                    public void onProgress(
+                                            UploadTask.TaskSnapshot taskSnapshot) {
+                                        double progress
+                                                = (100.0
+                                                * taskSnapshot.getBytesTransferred()
+                                                / taskSnapshot.getTotalByteCount());
+                                    }
+                                });
+                Log.i("REF PATH", ref.getPath());
+                images.add(ref.getPath());
+            }
         }
     }
 }

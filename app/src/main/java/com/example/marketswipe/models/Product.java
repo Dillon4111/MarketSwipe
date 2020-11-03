@@ -1,6 +1,10 @@
 package com.example.marketswipe.models;
 
+import android.net.Uri;
+
 import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.List;
 
 @IgnoreExtraProperties
 public class Product {
@@ -9,19 +13,21 @@ public class Product {
     private int onlineprice_id;
     private String name, description, category, sub_category;
     private double price;
-    //PICTURES
+    private List<String> images;
+    private String gps_location;
 
     public Product() {
     }
 
     public Product(String user_id, String name, String description, double price,
-                   String category, String sub_category) {
+                   String category, String sub_category, List<String> images) {
         this.user_id = user_id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
         this.sub_category = sub_category;
+        this.images = images;
     }
 
     public String getId() {
@@ -86,5 +92,21 @@ public class Product {
 
     public void setSub_category(String sub_category) {
         this.sub_category = sub_category;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public String getGps_location() {
+        return gps_location;
+    }
+
+    public void setGps_location(String gps_location) {
+        this.gps_location = gps_location;
     }
 }

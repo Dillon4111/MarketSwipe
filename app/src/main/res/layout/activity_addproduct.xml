@@ -11,6 +11,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="120dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="684dp"
+            android:layout_marginEnd="81dp"
+            android:layout_marginRight="81dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="120dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="804dp"
+            android:layout_marginEnd="81dp"
+            android:layout_marginRight="81dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="120dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="808dp"
+            android:layout_marginEnd="81dp"
+            android:layout_marginRight="81dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
         <TextView
             android:id="@+id/addProductLabel"
             android:layout_width="113dp"
@@ -36,7 +81,7 @@
             android:layout_marginEnd="101dp"
             android:layout_marginRight="101dp"
             android:ems="10"
-            android:hint="Product Name"
+            android:hint="*Product Name"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,13 +97,14 @@
             android:layout_marginEnd="101dp"
             android:layout_marginRight="101dp"
             android:ems="10"
-            android:hint="Price"
+            android:hint="*Price"
             android:inputType="numberDecimal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="207dp"
             android:layout_height="177dp"
             android:layout_marginStart="103dp"
@@ -126,12 +172,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="162dp"
             android:layout_marginLeft="162dp"
-            android:layout_marginTop="844dp"
+            android:layout_marginTop="932dp"
             android:layout_marginEnd="162dp"
             android:layout_marginRight="162dp"
             android:text="Enter"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.571"
+            app:layout_constraintHorizontal_bias="0.428"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -151,14 +197,15 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="244dp"
-            android:layout_height="122dp"
+            android:layout_width="120dp"
+            android:layout_height="110dp"
             android:layout_marginStart="80dp"
             android:layout_marginLeft="80dp"
-            android:layout_marginTop="677dp"
+            android:layout_marginTop="680dp"
             android:layout_marginEnd="81dp"
             android:layout_marginRight="81dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_gallery" />
