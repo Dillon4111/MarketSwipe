@@ -47,53 +47,34 @@ public class MainActivity extends AppCompatActivity {
 
         productList = new ArrayList<>();
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
-//        storageReference.child("/images/0ae4a5a4-f762-44b2-88f8-7a0a6f8c79cc")
-//                .getBytes(Long.MAX_VALUE)
-//                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                // Use the bytes to display the image
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                //imageView.setImageBitmap(bitmap);
-//                mSwipeView.addView(new Card(mContext, bitmap, mSwipeView));
-//            }
-//        });
 
         DatabaseReference productsDB = FirebaseDatabase.getInstance().getReference("Products");
         productsDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int count = 0;
-                //do
                 for (DataSnapshot productSnapshot : snapshot.getChildren()) {
                     final Product product = productSnapshot.getValue(Product.class);
                     productList.add(product);
                     Log.d("Product Snapshot", productSnapshot.getValue().toString());
                     Log.d("Product image 1", product.getImages().get(0));
-
-                    storageReference.child(product.getImages().get(0))
-                            .getBytes(Long.MAX_VALUE)
-                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    // Use the bytes to display the image
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    //imageView.setImageBitmap(bitmap);
-                                    productCoverPhotos.add(bitmap);
-                                    Log.d("Product bitmap", bitmap.toString());
-                                    Card card = new Card(MainActivity.this, product, bitmap, mSwipeView);
-                                    mSwipeView.addView(card);
-//                                    List<Object> cards = mSwipeView.getAllResolvers();
-//                                    Log.i("SWIPEVIEW", String.valueOf(mSwipeView.getAllResolvers()));
-//                                    Log.i("PRODUCT NAME", card.mProduct.getName());
-                                }
-                            });
-                    count++;
+//                            .getBytes(Long.MAX_VALUE)
+//                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                                @Override
+//                                public void onSuccess(byte[] bytes) {
+//                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                                    productCoverPhotos.add(bitmap);
+//                                    Log.d("Product bitmap", bitmap.toString());
+//                                    Card card = new Card(MainActivity.this, product, bitmap,
+//                                            mSwipeView, ref);
+//                                    mSwipeView.addView(card);
+//                                }
+//                            });
+                    Card card = new Card(MainActivity.this, product, null,
+                            mSwipeView, storageReference.child(product.getImages().get(0)));
+                    mSwipeView.addView(card);
                 }
-                //while (count < 3);
             }
 
             @Override
@@ -115,11 +96,6 @@ public class MainActivity extends AppCompatActivity {
 //                .setViewHeight(windowSize.y - bottomMargin);
 //                        .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
 //                        .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
-
-
-//        for(Profile profile : Utils.loadProfiles(this.getApplicationContext())){
-//            mSwipeView.addView(new TinderCard(mContext, profile, mSwipeView));
-//        }
 
 
         findViewById(R.id.downBtn).setOnClickListener(new View.OnClickListener() {

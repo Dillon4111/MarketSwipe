@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.marketswipe.R;
+import com.example.marketswipe.utils.GlideApp;
+import com.google.firebase.storage.StorageReference;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
@@ -35,17 +37,23 @@ public class Card {
     private Context mContext;
     private Bitmap bitmap;
     private SwipePlaceHolderView mSwipeView;
+    private StorageReference mRef;
 
-    public Card(Context context, Product product, Bitmap bitmap, SwipePlaceHolderView swipeView) {
+    public Card(Context context, Product product, Bitmap bitmap,
+                SwipePlaceHolderView swipeView, StorageReference ref) {
         mContext = context;
         mProduct = product;
-        this.bitmap = bitmap;
+        //this.bitmap = bitmap;
         mSwipeView = swipeView;
+        mRef = ref;
     }
 
     @Resolve
     private void onResolved() {
-        Glide.with(mContext).load(this.bitmap).into(productImageView);
+        //Glide.with(mContext).load(this.bitmap).into(productImageView);
+        GlideApp.with(mContext)
+                .load(mRef)
+                .into(productImageView);
         nameAgeTxt.setText(mProduct.getName() + ", " + mProduct.getPrice());
 //        locationNameTxt.setText(mProfile.getLocation());
     }
