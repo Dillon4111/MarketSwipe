@@ -2,22 +2,23 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="350dp"
-    android:layout_height="425dp"
+    android:layout_width="345dp"
+    android:layout_height="520dp"
     android:layout_marginBottom="50dp"
+    android:layout_marginTop="0dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="0dp"
         android:background="#FFFFFF"
         android:orientation="vertical"
-        app:cardCornerRadius="7dp"
+        app:cardCornerRadius="3dp"
         app:cardElevation="4dp">
 
         <ImageView
-            android:id="@+id/profileImageView"
+            android:id="@+id/productCoverImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="75dp"

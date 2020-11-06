@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.marketswipe.R;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
+import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
@@ -21,8 +22,8 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 @Layout(R.layout.card_view)
 public class Card {
 
-    @View(R.id.profileImageView)
-    private ImageView profileImageView;
+    @View(R.id.productCoverImageView)
+    private ImageView productImageView;
 
     @View(R.id.nameAgeTxt)
     private TextView nameAgeTxt;
@@ -30,7 +31,7 @@ public class Card {
     @View(R.id.locationNameTxt)
     private TextView locationNameTxt;
 
-    private Product mProduct;
+    public Product mProduct;
     private Context mContext;
     private Bitmap bitmap;
     private SwipePlaceHolderView mSwipeView;
@@ -43,35 +44,51 @@ public class Card {
     }
 
     @Resolve
-    private void onResolved(){
-        Glide.with(mContext).load(this.bitmap).into(profileImageView);
+    private void onResolved() {
+        Glide.with(mContext).load(this.bitmap).into(productImageView);
         nameAgeTxt.setText(mProduct.getName() + ", " + mProduct.getPrice());
 //        locationNameTxt.setText(mProfile.getLocation());
     }
 
     @SwipeOut
-    private void onSwipedOut(){
+    private void onSwipedOut() {
         Log.d("EVENT", "onSwipedOut");
         mSwipeView.addView(this);
     }
 
     @SwipeCancelState
-    private void onSwipeCancelState(){
+    private void onSwipeCancelState() {
         Log.d("EVENT", "onSwipeCancelState");
     }
 
     @SwipeIn
-    private void onSwipeIn(){
+    private void onSwipeIn() {
         Log.d("EVENT", "onSwipedIn");
     }
 
     @SwipeInState
-    private void onSwipeInState(){
+    private void onSwipeInState() {
         Log.d("EVENT", "onSwipeInState");
     }
 
     @SwipeOutState
-    private void onSwipeOutState(){
+    private void onSwipeOutState() {
         Log.d("EVENT", "onSwipeOutState");
     }
+
+    @Click(R.id.productCoverImageView)
+    public Product onImageViewClick(){
+        // do something
+        Log.d("EVENT", "onClickState");
+        return mProduct;
+    }
+
+
+//    @SwipingDirection
+//    public void onSwipingDirection(SwipeDirection direction, Product product) {
+//        if(direction == SwipeDirection.TOP) {
+//            Log.i("UP", product.getName());
+//            Log.d("DEBUG", "SwipingDirection " + direction.name());
+//        }
+//    }
 }

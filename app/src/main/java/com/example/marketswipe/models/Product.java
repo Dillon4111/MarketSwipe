@@ -4,10 +4,11 @@ import android.net.Uri;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.List;
 
 @IgnoreExtraProperties
-public class Product {
+public class Product implements Serializable {
     private String id;
     private String user_id;
     private int onlineprice_id;

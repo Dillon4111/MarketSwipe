@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -15,16 +17,24 @@
             android:id="@+id/rejectBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginRight="50dp"
             android:background="@android:drawable/btn_dialog" />
+
+        <ImageButton
+            android:id="@+id/downBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#FFFFFF"
+            android:src="@android:drawable/ic_menu_search" />
 
         <ImageButton
             android:id="@+id/acceptBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="50dp"
             android:background="@android:drawable/btn_star_big_on" />
     </LinearLayout>
-    <com.mindorks.placeholderview.SwipePlaceHolderView
+    <com.mindorks.placeholderview.SwipeDirectionalView
         android:id="@+id/swipeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
