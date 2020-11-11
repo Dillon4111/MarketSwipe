@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.marketswipe.R;
+import com.example.marketswipe.models.GalleryImage;
 import com.example.marketswipe.models.Product;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;;
+import com.google.firebase.storage.StorageReference;
+import com.mindorks.placeholderview.PlaceHolderView;;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
@@ -41,19 +45,24 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productSubCategory.setText(product.getSub_category());
         productDescription.setText(product.getDescription());
 
-//        PlaceHolderView phvGallery = (PlaceHolderView) findViewById(R.id.phv_gallery);
 
-        // (Optional): If customization is Required then use Builder with the PlaceHolderView
-//        phvGallery.getBuilder()
-//                .setHasFixedSize(false)
-//                .setItemViewCacheSize(10)
-//                .setLayoutManager(new GridLayoutManager(this, 3));
+        PlaceHolderView phvGallery = (PlaceHolderView) findViewById(R.id.phv_gallery);
 
-//        phvGallery
-//                .addView(new GalleryImage(getApplicationContext(), storageReference.child(product.getImages().get(0))))
-//                .addView(new GalleryImage(getApplicationContext(), storageReference.child(product.getImages().get(1))));
-//                .addView(new GalleryImage(getApplicationContext(), url3))
-//                .addView(new GalleryImage(getApplicationContext(), url4));
+// (Optional): If customization is Required then use Builder with the PlaceHolderView
+        phvGallery.getBuilder()
+                .setHasFixedSize(false)
+                .setItemViewCacheSize(10)
+                .setLayoutManager(new LinearLayoutManager(
+                        ProductDetailsActivity.this,
+                        LinearLayoutManager.HORIZONTAL,
+                        false));
+                        //new GridLayoutManager(this, 4));
+
+        phvGallery
+                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"))
+                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"))
+                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"))
+                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"));
     }
 
     @Override
