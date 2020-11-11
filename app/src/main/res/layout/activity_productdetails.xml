@@ -5,37 +5,126 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="154dp"
-        android:layout_height="290dp"
-        android:layout_marginStart="65dp"
-        android:layout_marginLeft="65dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginRight="65dp"
-        android:layout_marginBottom="139dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/googleg_standard_color_18" />
+    <TextView
+        android:id="@+id/productDescriptionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="332dp"
+        android:gravity="center"
+        android:text="Description"
+        app:layout_constraintEnd_toEndOf="@+id/productDescription"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="@+id/productDescription"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/testView"
-        android:layout_width="109dp"
-        android:layout_height="83dp"
-        android:layout_marginStart="151dp"
-        android:layout_marginLeft="151dp"
-        android:layout_marginTop="111dp"
-        android:layout_marginEnd="151dp"
-        android:layout_marginRight="151dp"
-        android:layout_marginBottom="537dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/productSubCategory"
+        android:layout_width="128dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="235dp"
+        android:layout_marginLeft="235dp"
+        android:layout_marginTop="276dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        android:gravity="center"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productPrice"
+        android:layout_width="293dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="168dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productDescription"
+        android:layout_width="293dp"
+        android:layout_height="147dp"
+        android:layout_marginTop="360dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productPriceLabel"
+        android:layout_width="44dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="144dp"
+        android:gravity="center"
+        android:text="Price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productName"
+        android:layout_width="293dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="74dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productNameLabel"
+        android:layout_width="44dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="49dp"
+        android:gravity="center"
+        android:text="Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productCategoryLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="251dp"
+        android:gravity="center"
+        android:text="Category"
+        app:layout_constraintEnd_toEndOf="@+id/productCategory"
+        app:layout_constraintStart_toStartOf="@+id/productCategory"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productSubCategoryLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="251dp"
+        android:gravity="center"
+        android:text="Sub-Category"
+        app:layout_constraintEnd_toEndOf="@+id/productSubCategory"
+        app:layout_constraintStart_toStartOf="@+id/productSubCategory"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productCategory"
+        android:layout_width="128dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="59dp"
+        android:layout_marginLeft="59dp"
+        android:layout_marginTop="276dp"
+        android:layout_marginEnd="224dp"
+        android:layout_marginRight="224dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
