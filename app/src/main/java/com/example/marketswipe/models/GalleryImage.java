@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.marketswipe.R;
 import com.example.marketswipe.activities.ProductDetailsActivity;
+import com.example.marketswipe.utils.GlideApp;
+import com.google.firebase.storage.StorageReference;
 import com.mindorks.placeholderview.annotations.Animate;
 import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
@@ -34,11 +36,12 @@ public class GalleryImage {
     int position;
 
     private Context context;
-    private String url;
+    //private String url;
+    private StorageReference ref;
 
-    public GalleryImage(Context context, String url) {
+    public GalleryImage(Context context, StorageReference ref) {
         this.context = context;
-        this.url = url;
+        this.ref = ref;
     }
 
     /*
@@ -58,7 +61,9 @@ public class GalleryImage {
 //
 //        Glide.with(context).load(url).apply(options).into(imageView);
 
-        Glide.with(context).load(url).into(imageView);
+//        Glide.with(context).load(url).placeholder(R.mipmap.ic_launcher_round).into(imageView);
+
+        GlideApp.with(context).load(ref).into(imageView);
     }
 
     /*

@@ -19,6 +19,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private TextView productName, productPrice, productCategory, productSubCategory, productDescription;
     private StorageReference storageReference;
+    Product product;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +29,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        final FirebaseStorage storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
         Intent i = getIntent();
-        Product product = (Product) i.getSerializableExtra("PRODUCT_INTENT");
+        product = (Product) i.getSerializableExtra("PRODUCT_INTENT");
 
         productName = findViewById(R.id.productName);
         productPrice = findViewById(R.id.productPrice);
@@ -58,16 +57,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         false));
                         //new GridLayoutManager(this, 4));
 
-        phvGallery
-                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"))
-                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"))
-                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"))
-                .addView(new GalleryImage(getApplicationContext(), "https://i.imgur.com/AxETlhd.jpg"));
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        for(String url: product.getImages()) {
+
+            phvGallery.addView(new GalleryImage(getApplicationContext(), storageReference.child(url)));
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_enter, R.anim.slide_out_enter);
+    }
+
+    public void getImageUrls() {
     }
 }

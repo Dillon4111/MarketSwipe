@@ -59,18 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     productList.add(product);
                     Log.d("Product Snapshot", productSnapshot.getValue().toString());
                     Log.d("Product image 1", product.getImages().get(0));
-//                            .getBytes(Long.MAX_VALUE)
-//                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                                @Override
-//                                public void onSuccess(byte[] bytes) {
-//                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                                    productCoverPhotos.add(bitmap);
-//                                    Log.d("Product bitmap", bitmap.toString());
-//                                    Card card = new Card(MainActivity.this, product, bitmap,
-//                                            mSwipeView, ref);
-//                                    mSwipeView.addView(card);
-//                                }
-//                            });
+
                     Card card = new Card(MainActivity.this, product, null,
                             mSwipeView, storageReference.child(product.getImages().get(0)));
                     mSwipeView.addView(card);
@@ -84,18 +73,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
-        int bottomMargin = WindowManager.dpToPx(160); // if there is some view of size 160 dp
-        int windowHeight = WindowManager.getDeviceHeight(MainActivity.this);
-        int windowWidth = WindowManager.getDeviceWidth(MainActivity.this);
 
         mSwipeView.getBuilder().setDisplayViewCount(4).setSwipeDecor(
                 new SwipeDecor()
                         .setPaddingTop(-50)
                         .setRelativeScale(0.01f));
-//                .setViewWidth(windowSize.x)
-//                .setViewHeight(windowSize.y - bottomMargin);
-//                        .setSwipeInMsgLayoutId(R.layout.tinder_swipe_in_msg_view)
-//                        .setSwipeOutMsgLayoutId(R.layout.tinder_swipe_out_msg_view));
 
 
         findViewById(R.id.downBtn).setOnClickListener(new View.OnClickListener() {
