@@ -27,7 +27,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productdetails);
 
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
 
         Intent i = getIntent();
         product = (Product) i.getSerializableExtra("PRODUCT_INTENT");

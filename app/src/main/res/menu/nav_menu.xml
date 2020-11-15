@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="APP">
+        <menu>
+            <item android:title="@string/my_products"
+                android:icon="@drawable/ic_baseline_folder_24" />
+            <item android:title="@string/favourites"
+                android:icon="@drawable/ic_baseline_star_24" />
+            <item android:title="Recent"
+                android:icon="@drawable/ic_baseline_access_time_24" />
+        </menu>
+    </item>
+
+    <item android:title="OTHER">
+        <menu>
+            <item android:title="Settings"
+                android:icon="@drawable/ic_baseline_settings_applications_24" />
+            <item android:title="Log Out"
+                android:icon="@drawable/ic_baseline_power_settings_new_24" />
+        </menu>
+    </item>
+
+</menu>

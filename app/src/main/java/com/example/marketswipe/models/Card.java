@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
 import com.bumptech.glide.Glide;
 import com.example.marketswipe.R;
 import com.example.marketswipe.utils.GlideApp;
@@ -50,9 +52,14 @@ public class Card {
 
     @Resolve
     private void onResolved() {
-        //Glide.with(mContext).load(this.bitmap).into(productImageView);
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
+        circularProgressDrawable.setStrokeWidth(1f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
+
         GlideApp.with(mContext)
                 .load(mRef)
+                .placeholder(circularProgressDrawable)
                 .into(productImageView);
         nameAgeTxt.setText(mProduct.getName() + ", " + mProduct.getPrice());
 //        locationNameTxt.setText(mProfile.getLocation());

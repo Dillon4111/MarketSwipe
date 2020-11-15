@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Market Swipe</string>
+
+    <string name="my_products">My Products</string>
+    <string name="favourites">Favourites</string>
+    <string name="openNavDrawer">Navigation Drawer Open</string>
+    <string name="closeNavDrawer">Navigation Drawer Close</string>
 </resources>
