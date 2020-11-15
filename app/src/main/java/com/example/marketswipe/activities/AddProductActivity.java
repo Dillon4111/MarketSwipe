@@ -355,29 +355,6 @@ public class AddProductActivity extends AppCompatActivity {
             for (int i = 0; i < bitmaps.size(); i++) {
                 imageViews.get(i).setImageBitmap(bitmaps.get(i));
             }
-
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    for (final Bitmap b : bitmaps) {
-//
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//                                imageView1.setImageBitmap(b);
-//                            }
-//                        });
-//
-//                        try {
-//                            Thread.sleep(3000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }).start();
         }
     }
 
