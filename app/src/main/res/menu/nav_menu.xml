@@ -2,23 +2,41 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="APP">
+        <group android:checkableBehavior="single">
         <menu>
-            <item android:title="@string/my_products"
+            <item
+                android:id="@+id/nav_add_product"
+                android:title="Add Product"
+                android:icon="@drawable/ic_add_product" />
+            <item
+                android:id="@+id/nav_my_products"
+                android:title="@string/my_products"
                 android:icon="@drawable/ic_baseline_folder_24" />
-            <item android:title="@string/favourites"
+            <item
+                android:id="@+id/nav_favourites"
+                android:title="@string/favourites"
                 android:icon="@drawable/ic_baseline_star_24" />
-            <item android:title="Recent"
+            <item
+                android:id="@+id/nav_recent"
+                android:title="Recent"
                 android:icon="@drawable/ic_baseline_access_time_24" />
         </menu>
+        </group>
     </item>
 
     <item android:title="OTHER">
+        <group android:checkableBehavior="single">
         <menu>
-            <item android:title="Settings"
+            <item
+                android:id="@+id/nav_settings"
+                android:title="Settings"
                 android:icon="@drawable/ic_baseline_settings_applications_24" />
-            <item android:title="Log Out"
+            <item
+                android:id="@+id/nav_log_out"
+                android:title="Log Out"
                 android:icon="@drawable/ic_baseline_power_settings_new_24" />
         </menu>
+        </group>
     </item>
 
 </menu>

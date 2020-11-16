@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.marketswipe.R;
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -138,13 +140,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.nav_add_product:
+                Intent i = new Intent(MainActivity.this, AddProductActivity.class);
+                startActivity(i);
+                break;
+            case R.id.nav_my_products:
+                Log.i("Menu", "1");
+                break;
+            case R.id.nav_favourites:
+                Log.i("Menu", "2");
+                break;
+            case R.id.nav_recent:
+                Log.i("Menu", "3");
+                break;
+            case R.id.nav_settings:
+                Log.i("Menu", "4");
+                break;
+            case R.id.nav_log_out:
+                Log.i("Menu", "5");
+                break;
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 
     @Override

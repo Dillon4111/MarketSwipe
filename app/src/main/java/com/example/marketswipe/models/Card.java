@@ -53,8 +53,8 @@ public class Card {
     @Resolve
     private void onResolved() {
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
-        circularProgressDrawable.setStrokeWidth(1f);
-        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.setStrokeWidth(3f);
+        circularProgressDrawable.setCenterRadius(50f);
         circularProgressDrawable.start();
 
         GlideApp.with(mContext)
@@ -79,6 +79,7 @@ public class Card {
     @SwipeIn
     private void onSwipeIn() {
         Log.d("EVENT", "onSwipedIn");
+        mSwipeView.addView(this);
     }
 
     @SwipeInState

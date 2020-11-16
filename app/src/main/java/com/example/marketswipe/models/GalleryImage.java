@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.cardview.widget.CardView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -63,7 +64,15 @@ public class GalleryImage {
 
 //        Glide.with(context).load(url).placeholder(R.mipmap.ic_launcher_round).into(imageView);
 
-        GlideApp.with(context).load(ref).into(imageView);
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable.setStrokeWidth(4f);
+        circularProgressDrawable.setCenterRadius(60f);
+        circularProgressDrawable.start();
+
+        GlideApp.with(context)
+                .load(ref)
+                .placeholder(circularProgressDrawable)
+                .into(imageView);
     }
 
     /*
