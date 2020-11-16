@@ -3,13 +3,10 @@ package com.example.marketswipe.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,8 +19,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.marketswipe.R;
 import com.example.marketswipe.models.Card;
 import com.example.marketswipe.models.Product;
-import com.example.marketswipe.utils.WindowManager;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 for (DataSnapshot productSnapshot : snapshot.getChildren()) {
                     final Product product = productSnapshot.getValue(Product.class);
                     productList.add(product);
-                    Log.d("Product Snapshot", productSnapshot.getValue().toString());
-                    Log.d("Product image 1", product.getImages().get(0));
+//                    Log.d("Product Snapshot", productSnapshot.getValue().toString());
+//                    Log.d("Product image 1", product.getImages().get(0));
 
                     Card card = new Card(MainActivity.this, product, null,
                             mSwipeView, storageReference.child(product.getImages().get(0)));

@@ -1,11 +1,11 @@
 package com.example.marketswipe.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,12 +14,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.marketswipe.R;
+import com.example.marketswipe.utils.LocationService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -27,6 +32,8 @@ public class SignInActivity extends AppCompatActivity {
     private EditText signInEmail, signInPassword;
     private Button signInButton;
     private TextView orSignInText;
+
+    private static final int PERMISSIONS_REQUEST = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +77,30 @@ public class SignInActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(SignInActivity.this, "User signed in",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                                        startActivity(intent);
+
+
+                                        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+                                        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                                            finish();
+                                        }
+
+                                        int permission = ContextCompat.checkSelfPermission(SignInActivity.this,
+                                                Manifest.permission.ACCESS_FINE_LOCATION);
+
+                                        if (permission == PackageManager.PERMISSION_GRANTED) {
+
+                                            if(startTrackerService()){
+                                                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                                                startActivity(intent);
+                                            }
+
+                                        } else {
+
+                                            ActivityCompat.requestPermissions(SignInActivity.this,
+                                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                                    PERMISSIONS_REQUEST);
+                                        }
+
                                     } else {
                                         Log.w("MySignin", "SignInUserWithEmail:failure", task.getException());
                                         Toast.makeText(SignInActivity.this, "Authentication failed",
@@ -91,5 +120,28 @@ public class SignInActivity extends AppCompatActivity {
              startActivity(intent);
          }
      });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
+            grantResults) {
+
+        if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            startTrackerService();
+        } else {
+
+            Toast.makeText(this, "Please enable location services to allow GPS tracking", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private boolean startTrackerService() {
+        startService(new Intent(SignInActivity.this, LocationService.class));
+
+        Toast.makeText(this, "GPS tracking enabled", Toast.LENGTH_SHORT).show();
+
+        return true;
     }
 }

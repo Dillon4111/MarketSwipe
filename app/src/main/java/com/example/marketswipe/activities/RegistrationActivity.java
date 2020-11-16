@@ -53,7 +53,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String userName = userNameEdit.getText().toString();
-                final String email = emailEdit.getText().toString();
+                final String email = emailEdit.getText().toString().trim();
                 final String password = passwordEdit.getText().toString();
                 String confPassword = confPasswordEdit.getText().toString();
 
@@ -110,6 +110,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                                     public void onSuccess(Void aVoid) {
                                                         Toast.makeText(RegistrationActivity.this, "Registration is successful",
                                                                 Toast.LENGTH_LONG).show();
+                                                        Intent intent = new Intent(RegistrationActivity.this, SignInActivity.class);
+                                                        startActivity(intent);
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {

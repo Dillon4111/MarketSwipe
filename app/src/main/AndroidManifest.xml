@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +25,7 @@
         <activity android:name=".activities.AddProductActivity" />
         <activity android:name=".activities.MainActivity"/>
         <activity android:name=".activities.ProductDetailsActivity"/>
+        <service android:name=".utils.LocationService" android:process=":location_service" />
     </application>
 
 </manifest>
