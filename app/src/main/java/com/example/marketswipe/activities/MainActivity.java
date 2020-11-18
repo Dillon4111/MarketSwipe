@@ -140,10 +140,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
+        Intent i;
         switch (id) {
             case R.id.nav_add_product:
-                Intent i = new Intent(MainActivity.this, AddProductActivity.class);
+                i = new Intent(MainActivity.this, AddProductActivity.class);
                 startActivity(i);
                 break;
             case R.id.nav_my_products:
@@ -156,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.i("Menu", "3");
                 break;
             case R.id.nav_settings:
-                Log.i("Menu", "4");
+                i = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(i);
                 break;
             case R.id.nav_log_out:
                 Log.i("Menu", "5");
