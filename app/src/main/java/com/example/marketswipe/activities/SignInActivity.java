@@ -2,11 +2,15 @@ package com.example.marketswipe.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +57,7 @@ public class SignInActivity extends AppCompatActivity {
                 String email = signInEmail.getText().toString().trim();
                 String password = signInPassword.getText().toString();
 
-                if(email.matches("") || password.matches("")){
+                if (email.matches("") || password.matches("")) {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(SignInActivity.this);
 
                     dlgAlert.setMessage("Please fill in both fields");
@@ -68,8 +72,7 @@ public class SignInActivity extends AppCompatActivity {
 
                                 }
                             });
-                }
-                else {
+                } else {
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -89,7 +92,7 @@ public class SignInActivity extends AppCompatActivity {
 
                                         if (permission == PackageManager.PERMISSION_GRANTED) {
 
-                                            if(startTrackerService()){
+                                            if (startTrackerService()) {
                                                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                                 startActivity(intent);
                                             }
@@ -112,14 +115,42 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-     orSignInText.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-             Log.d("OR REGISTER", "Link clicked");
-             Intent intent = new Intent(SignInActivity.this, RegistrationActivity.class);
-             startActivity(intent);
-         }
-     });
+        orSignInText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("OR REGISTER", "Link clicked");
+                Intent intent = new Intent(SignInActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        LocationManager lm = (LocationManager) SignInActivity.this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        if (!gps_enabled && !network_enabled) {
+            // notify user
+            new AlertDialog.Builder(SignInActivity.this)
+                    .setMessage(R.string.gps_network_not_enabled)
+                    .setPositiveButton(R.string.open_location_settings, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            SignInActivity.this.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(R.string.Cancel, null)
+                    .show();
+        }
     }
 
     @Override

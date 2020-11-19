@@ -3,6 +3,7 @@ package com.example.marketswipe.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,7 +20,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.marketswipe.R;
 import com.example.marketswipe.models.Card;
 import com.example.marketswipe.models.Product;
+import com.example.marketswipe.utils.DistanceCalculator;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,18 +46,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Bitmap> productCoverPhotos = new ArrayList<>();
     private Toolbar toolbar;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private String uid;
+
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+
+    private Location productLocation, userLocation;
+    Double productLat, productLong, userLat, userLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mSwipeView = null;
+
         productList = new ArrayList<>();
 
         final FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        uid = mUser.getUid();
+
 
         DatabaseReference productsDB = FirebaseDatabase.getInstance().getReference("Products");
         productsDB.addValueEventListener(new ValueEventListener() {
@@ -61,13 +79,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot productSnapshot : snapshot.getChildren()) {
                     final Product product = productSnapshot.getValue(Product.class);
-                    productList.add(product);
-//                    Log.d("Product Snapshot", productSnapshot.getValue().toString());
-//                    Log.d("Product image 1", product.getImages().get(0));
 
-                    Card card = new Card(MainActivity.this, product, null,
-                            mSwipeView, storageReference.child(product.getImages().get(0)));
-                    mSwipeView.addView(card);
+                    if(!product.getUser_id().equals(uid)) {
+//                        final Double productLat, productLong, userLat, userLong;
+
+                        DatabaseReference locationDB = FirebaseDatabase.getInstance().getReference("User_Location");
+                        locationDB.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot locationSnapshot : snapshot.getChildren()) {
+                                    if(locationSnapshot.getKey().equals(product.getUser_id())){
+                                        productLat = (Double) locationSnapshot.child("location").child("latitude").getValue();
+                                        productLong = (Double) locationSnapshot.child("location").child("longitude").getValue();
+                                    }
+                                    else if(locationSnapshot.getKey().equals(uid)){
+                                        userLat = (Double) locationSnapshot.child("location").child("latitude").getValue();
+                                        userLong = (Double) locationSnapshot.child("location").child("longitude").getValue();
+                                    }
+                                }
+
+                                DistanceCalculator distanceCalculator = new DistanceCalculator();
+                                Double distance = distanceCalculator.distance(productLat, productLong, userLat, userLong, "K");
+
+
+                                Card card = new Card(MainActivity.this, product, null,
+                                        mSwipeView, storageReference.child(product.getImages().get(0)), distance);
+                                mSwipeView.addView(card);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
                 }
             }
 
@@ -160,7 +205,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i);
                 break;
             case R.id.nav_log_out:
-                Log.i("Menu", "5");
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(MainActivity.this, "User signed out", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                startActivity(intent);
                 break;
         }
 

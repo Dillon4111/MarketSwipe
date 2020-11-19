@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
-import com.bumptech.glide.Glide;
 import com.example.marketswipe.R;
 import com.example.marketswipe.utils.GlideApp;
 import com.google.firebase.storage.StorageReference;
@@ -30,10 +29,10 @@ public class Card {
     private ImageView productImageView;
 
     @View(R.id.nameAgeTxt)
-    private TextView nameAgeTxt;
+    private TextView productInfoTxt;
 
     @View(R.id.locationNameTxt)
-    private TextView locationNameTxt;
+    private TextView locationTxt;
 
     public Product mProduct;
     private Context mContext;
@@ -41,13 +40,16 @@ public class Card {
     private SwipePlaceHolderView mSwipeView;
     private StorageReference mRef;
 
+    private Double mLocation;
+
     public Card(Context context, Product product, Bitmap bitmap,
-                SwipePlaceHolderView swipeView, StorageReference ref) {
+                SwipePlaceHolderView swipeView, StorageReference ref, Double location) {
         mContext = context;
         mProduct = product;
         //this.bitmap = bitmap;
         mSwipeView = swipeView;
         mRef = ref;
+        mLocation = location;
     }
 
     @Resolve
@@ -61,8 +63,8 @@ public class Card {
                 .load(mRef)
                 .placeholder(circularProgressDrawable)
                 .into(productImageView);
-        nameAgeTxt.setText(mProduct.getName() + ", " + mProduct.getPrice());
-//        locationNameTxt.setText(mProfile.getLocation());
+        productInfoTxt.setText(mProduct.getName() + ", " + mProduct.getPrice());
+        locationTxt.setText(String.format("%1$,.2f", mLocation) + "km");
     }
 
     @SwipeOut

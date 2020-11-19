@@ -7,4 +7,7 @@
     <string name="closeNavDrawer">Navigation Drawer Close</string>
 
     <string name="tracking_enabled_notif">Tracking is currently enabled. Tap to cancel.</string>
+    <string name="gps_network_not_enabled">GPS Tracking is currently disabled</string>
+    <string name="open_location_settings">Open location settings</string>
+    <string name="Cancel">Cancel</string>
 </resources>
