@@ -53,8 +53,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private Location productLocation, userLocation;
-    Double productLat, productLong, userLat, userLong;
+    Double productLat, productLong, userLat, userLong, userDistance;
+    Long userDistanceLong;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mUser = mAuth.getCurrentUser();
         uid = mUser.getUid();
 
+        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("Users");
+        userDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot userSnapshot: snapshot.getChildren()) {
+                    if(userSnapshot.getKey().equals(uid)) {
+                        userDistanceLong = (Long) userSnapshot.child("distance").getValue();
+                        userDistance = userDistanceLong.doubleValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         DatabaseReference productsDB = FirebaseDatabase.getInstance().getReference("Products");
         productsDB.addValueEventListener(new ValueEventListener() {
@@ -101,10 +119,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 DistanceCalculator distanceCalculator = new DistanceCalculator();
                                 Double distance = distanceCalculator.distance(productLat, productLong, userLat, userLong, "K");
 
-
-                                Card card = new Card(MainActivity.this, product, null,
-                                        mSwipeView, storageReference.child(product.getImages().get(0)), distance);
-                                mSwipeView.addView(card);
+                                if(userDistance>=distance) {
+                                    Card card = new Card(MainActivity.this, product, null,
+                                            mSwipeView, storageReference.child(product.getImages().get(0)), distance);
+                                    mSwipeView.addView(card);
+                                }
                             }
 
                             @Override
@@ -208,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(MainActivity.this, "User signed out", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                finish();
                 startActivity(intent);
                 break;
         }

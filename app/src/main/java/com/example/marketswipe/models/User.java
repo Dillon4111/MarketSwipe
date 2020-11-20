@@ -10,7 +10,7 @@ public class User {
     private String facebookid;
     private String gpslocation;
     private int num_ratings;
-    private double rating;
+    private double rating, distance;
 
 
     public User() {
@@ -77,4 +77,11 @@ public class User {
         this.rating = rating;
     }
 
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 }

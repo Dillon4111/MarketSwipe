@@ -46,6 +46,8 @@ public class SignInActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        checkGPSIsOn();
+
         signInEmail = findViewById(R.id.signInEmail);
         signInPassword = findViewById(R.id.signInPassword);
         signInButton = findViewById(R.id.signInButton);
@@ -123,7 +125,32 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
+            grantResults) {
+
+        if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            startTrackerService();
+        } else {
+
+            Toast.makeText(this, "Please enable location services to allow GPS tracking", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private boolean startTrackerService() {
+        startService(new Intent(SignInActivity.this, LocationService.class));
+
+        Toast.makeText(this, "GPS tracking enabled", Toast.LENGTH_SHORT).show();
+
+        return true;
+    }
+
+    private void checkGPSIsOn() {
         LocationManager lm = (LocationManager) SignInActivity.this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
@@ -151,28 +178,5 @@ public class SignInActivity extends AppCompatActivity {
                     .setNegativeButton(R.string.Cancel, null)
                     .show();
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
-            grantResults) {
-
-        if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            startTrackerService();
-        } else {
-
-            Toast.makeText(this, "Please enable location services to allow GPS tracking", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private boolean startTrackerService() {
-        startService(new Intent(SignInActivity.this, LocationService.class));
-
-        Toast.makeText(this, "GPS tracking enabled", Toast.LENGTH_SHORT).show();
-
-        return true;
     }
 }
