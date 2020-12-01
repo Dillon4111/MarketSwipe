@@ -216,8 +216,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_favourites:
                 Log.i("Menu", "2");
                 break;
-            case R.id.nav_recent:
-                Log.i("Menu", "3");
+            case R.id.map:
+                i = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(i);
                 break;
             case R.id.nav_settings:
                 i = new Intent(MainActivity.this, SettingsActivity.class);

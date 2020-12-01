@@ -10,4 +10,7 @@
     <string name="gps_network_not_enabled">GPS Tracking is currently disabled</string>
     <string name="open_location_settings">Open location settings</string>
     <string name="Cancel">Cancel</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="google_maps_key">AIzaSyB11dLuu4kd17WSqNs0QWAS_bkk2_rOVrU</string>
 </resources>
