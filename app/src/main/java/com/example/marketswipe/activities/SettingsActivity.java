@@ -3,7 +3,9 @@ package com.example.marketswipe.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -26,6 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.List;
+
 public class SettingsActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "MyPrefsFile";
     public static final String SILENT_MODE = "silentMode";
@@ -40,15 +44,17 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
+    private double userDistance = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        seekbar();
-
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+
+        seekbar();
 
         Context context = getApplicationContext();
         final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
@@ -57,10 +63,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         silentSwitch = findViewById(R.id.silentSwitch);
 
-        if(!silent) {
+        if (!silent) {
             silentSwitch.setText("Notifications Off");
-        }
-        else {
+        } else {
             silentSwitch.setText("Notifications On");
         }
 
@@ -69,15 +74,14 @@ public class SettingsActivity extends AppCompatActivity {
         silentSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!silent) {
+                if (!silent) {
                     silentSwitch.setChecked(true);
                     silentSwitch.setText("Notifications On");
                     silent = true;
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putBoolean(SILENT_MODE, true);
                     editor.commit();
-                }
-                else {
+                } else {
                     silentSwitch.setChecked(false);
                     silentSwitch.setText("Notifications Off");
                     silent = false;
@@ -109,27 +113,56 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    public void seekbar( ){
+    public void seekbar() {
         seek_bar = findViewById(R.id.seekBar);
         text_view = findViewById(R.id.textView);
-        text_view.setText("Distance: " + seek_bar.getProgress() + "/" +seek_bar.getMax() + "km");
+
+        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("Users");
+        userDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot userSnapshot: snapshot.getChildren()) {
+                    if(userSnapshot.getKey().equals(mUser.getUid())) {
+                        Long userDistanceLong = (Long) userSnapshot.child("distance").getValue();
+                        userDistance = userDistanceLong.doubleValue();
+
+                        Log.d("User distance", String.valueOf(userDistance).replace(".0",""));
+
+                        if (userDistance == 0) {
+                            text_view.setText("Distance: " + seek_bar.getProgress() + "/" + seek_bar.getMax() + "km");
+                        } else {
+                            text_view.setText("Distance: " + userDistance + "/" + seek_bar.getMax() + "km");
+                            seek_bar.setProgress(Integer.parseInt(String.valueOf(userDistance).replace(".0","")));
+                        }
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         seek_bar.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
 
                     int progress_value;
+
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         progress_value = progress;
-                        text_view.setText("Distance: " + seek_bar.getProgress() + "/" +seek_bar.getMax() + "km");
+                        text_view.setText("Distance: " + seek_bar.getProgress() + "/" + seek_bar.getMax() + "km");
                     }
 
                     @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) { }
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        text_view.setText("Distance: " + seek_bar.getProgress() + "/" +seek_bar.getMax() + "km");
+                        text_view.setText("Distance: " + seek_bar.getProgress() + "/" + seek_bar.getMax() + "km");
                     }
                 }
         );

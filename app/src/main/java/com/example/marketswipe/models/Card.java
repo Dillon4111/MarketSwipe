@@ -6,14 +6,24 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.example.marketswipe.R;
 import com.example.marketswipe.utils.GlideApp;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Click;
 import com.mindorks.placeholderview.annotations.Layout;
+import com.mindorks.placeholderview.annotations.NonReusable;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
 import com.mindorks.placeholderview.annotations.swipe.SwipeCancelState;
@@ -22,6 +32,10 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@NonReusable
 @Layout(R.layout.card_view)
 public class Card {
 
@@ -40,7 +54,12 @@ public class Card {
     private SwipePlaceHolderView mSwipeView;
     private StorageReference mRef;
 
+    private FirebaseUser mUser;
+    private FirebaseAuth mAuth;
+
     private Double mLocation;
+
+    List<String> favs = new ArrayList<>();
 
     public Card(Context context, Product product, Bitmap bitmap,
                 SwipePlaceHolderView swipeView, StorageReference ref, Double location) {
@@ -82,6 +101,47 @@ public class Card {
     private void onSwipeIn() {
         Log.d("EVENT", "onSwipedIn");
         mSwipeView.addView(this);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        final String uid = mUser.getUid();
+
+        final DatabaseReference db = FirebaseDatabase.getInstance()
+                .getReference("Users")
+                .child(uid)
+                .child("product_ids");
+
+        DatabaseReference usersDB = FirebaseDatabase.getInstance().getReference("Users");
+        usersDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    if (userSnapshot.getKey().equals(uid)) {
+
+                        if (userSnapshot.child("product_ids").exists()) {
+                            favs = (List<String>) userSnapshot.child("product_ids").getValue();
+                            Log.d("IF", "HELLO");
+                        } else {
+                            Log.d("ELSE", "HELLO");
+                        }
+                        Log.d("FAVS", favs.toString());
+                        Log.d("User ID", uid);
+                        Log.d("P ID", mProduct.getId());
+
+                        favs.add(mProduct.getId());
+                        db.setValue(favs);
+                        favs.clear();
+
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @SwipeInState
@@ -95,18 +155,9 @@ public class Card {
     }
 
     @Click(R.id.productCoverImageView)
-    public Product onImageViewClick(){
+    public Product onImageViewClick() {
         // do something
         Log.d("EVENT", "onClickState");
         return mProduct;
     }
-
-
-//    @SwipingDirection
-//    public void onSwipingDirection(SwipeDirection direction, Product product) {
-//        if(direction == SwipeDirection.TOP) {
-//            Log.i("UP", product.getName());
-//            Log.d("DEBUG", "SwipingDirection " + direction.name());
-//        }
-//    }
 }

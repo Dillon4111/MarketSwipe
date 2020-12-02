@@ -2,6 +2,9 @@ package com.example.marketswipe.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @IgnoreExtraProperties
 public class User {
     private String uid;
@@ -11,6 +14,7 @@ public class User {
     private String gpslocation;
     private int num_ratings;
     private double rating, distance;
+    private List<String> product_ids;
 
 
     public User() {
@@ -19,6 +23,8 @@ public class User {
     public User(String username, String email) {
         this.username = username;
         this.email = email;
+        this.product_ids = new ArrayList<>();
+        this.distance = 25;
     }
 
     public String getUid() {
@@ -83,5 +89,13 @@ public class User {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public List<String> getProductIds() {
+        return product_ids;
+    }
+
+    public void setProductIds(List<String> productIds) {
+        this.product_ids = productIds;
     }
 }

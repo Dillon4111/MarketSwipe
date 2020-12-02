@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -100,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     if(!product.getUser_id().equals(uid)) {
 //                        final Double productLat, productLong, userLat, userLong;
-
+                        product.setId(productSnapshot.getKey());
+                        Log.d("MAIN PROD ID", product.getId());
                         DatabaseReference locationDB = FirebaseDatabase.getInstance().getReference("User_Location");
                         locationDB.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -143,9 +145,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mSwipeView = (SwipePlaceHolderView) findViewById(R.id.swipeView);
 
-        mSwipeView.getBuilder().setDisplayViewCount(4).setSwipeDecor(
+        mSwipeView.getBuilder().setSwipeType(SwipePlaceHolderView.SWIPE_TYPE_HORIZONTAL)
+                .setDisplayViewCount(4).setSwipeDecor(
                 new SwipeDecor()
                         //.setPaddingTop(-50)
+                        .setSwipeAnimFactor(0.75f)
+                        .setSwipeRotationAngle(20)
                         .setPaddingLeft(30)
                         .setRelativeScale(0.01f));
 
