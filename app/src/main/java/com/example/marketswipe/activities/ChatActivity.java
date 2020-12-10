@@ -114,6 +114,7 @@ public class ChatActivity extends AppCompatActivity {
                 for (DataSnapshot userSnap : snapshot.getChildren()) {
                     if (userSnap.getKey().equals(uid)) {
                         userName = userSnap.child("username").getValue().toString();
+                        break;
                     }
                 }
             }
@@ -213,6 +214,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent i = new Intent(ChatActivity.this, ChatHistoryActivity.class);
         finish();
     }
 }

@@ -29,7 +29,6 @@ public class ChatHistoryActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private FirebaseAuth mAuth;
 
-    private ArrayList<Product> myDataset= new ArrayList<Product>();
     private MyChatsAdapter mAdapter;
     RecyclerView myRecyclerView;
 
@@ -59,6 +58,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
                         for(DataSnapshot chatidSnap: chatSnap.getChildren()) {
                             chatIDs.add(chatidSnap.getKey());
                         }
+                        break;
                     }
                 }
             }

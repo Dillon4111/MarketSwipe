@@ -139,25 +139,47 @@ public class MyChatsAdapter extends RecyclerView.Adapter<MyChatsAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("SECONDUIUIUIUI", secondUID);
-                DatabaseReference chatsDB = FirebaseDatabase.getInstance().getReference("Chats");
-                //chatID = UUID.randomUUID().toString();
                 chatsDB.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot chatSnap : snapshot.getChildren()) {
-                            List<String> members = new ArrayList<>();
-                            members = (List<String>) chatSnap.child("members").getValue();
-                            if (members.contains(mUser.getUid()) && members.contains(secondUID)) {
-                                chatID = chatSnap.getKey();
-                                Log.d("CHATID", chatID);
+                            if (chatSnap.getKey().equals(chatMessage.getChatID())) {
+                                List<String> ids = (List<String>) chatSnap.child("members").getValue();
+                                if (ids.get(0).equals(mUser.getUid()))
+                                    secondUID = ids.get(1);
+                                else if (!ids.get(0).equals(mUser.getUid()))
+                                    secondUID = ids.get(0);
+
+                                Log.d("HEYHEYHEY", secondUID);
+
                                 break;
                             }
                         }
-                        Intent i = new Intent(context, ChatActivity.class);
-                        i.putExtra("SECOND_ID", secondUID);
-                        i.putExtra("CHAT_ID", chatID);
-                        context.startActivity(i);
+                        Log.d("SECONDUIUIUIUI", secondUID);
+                        DatabaseReference chatsDB = FirebaseDatabase.getInstance().getReference("Chats");
+                        //chatID = UUID.randomUUID().toString();
+                        chatsDB.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot chatSnap : snapshot.getChildren()) {
+                                    List<String> members = new ArrayList<>();
+                                    members = (List<String>) chatSnap.child("members").getValue();
+                                    if (members.contains(mUser.getUid()) && members.contains(secondUID)) {
+                                        chatID = chatSnap.getKey();
+                                        Log.d("CHATID", chatID);
+                                        break;
+                                    }
+                                }
+                                Intent i = new Intent(context, ChatActivity.class);
+                                i.putExtra("SECOND_ID", secondUID);
+                                i.putExtra("CHAT_ID", chatID);
+                                context.startActivity(i);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
 
                     @Override
