@@ -14,7 +14,7 @@ public class User {
     private String gpslocation;
     private int num_ratings;
     private double rating, distance;
-    private List<String> product_ids;
+    private List<String> favourites;
 
 
     public User() {
@@ -23,7 +23,7 @@ public class User {
     public User(String username, String email) {
         this.username = username;
         this.email = email;
-        this.product_ids = new ArrayList<>();
+        this.favourites = new ArrayList<>();
         this.distance = 25;
     }
 
@@ -92,10 +92,10 @@ public class User {
     }
 
     public List<String> getProductIds() {
-        return product_ids;
+        return favourites;
     }
 
     public void setProductIds(List<String> productIds) {
-        this.product_ids = productIds;
+        this.favourites = productIds;
     }
 }

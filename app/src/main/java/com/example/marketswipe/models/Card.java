@@ -109,7 +109,7 @@ public class Card {
         final DatabaseReference db = FirebaseDatabase.getInstance()
                 .getReference("Users")
                 .child(uid)
-                .child("product_ids");
+                .child("favourites");
 
         DatabaseReference usersDB = FirebaseDatabase.getInstance().getReference("Users");
         usersDB.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -118,8 +118,8 @@ public class Card {
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     if (userSnapshot.getKey().equals(uid)) {
 
-                        if (userSnapshot.child("product_ids").exists()) {
-                            favs = (List<String>) userSnapshot.child("product_ids").getValue();
+                        if (userSnapshot.child("favourites").exists()) {
+                            favs = (List<String>) userSnapshot.child("favourites").getValue();
                             Log.d("IF", "HELLO");
                         } else {
                             Log.d("ELSE", "HELLO");
