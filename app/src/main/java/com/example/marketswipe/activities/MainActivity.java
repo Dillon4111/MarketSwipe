@@ -117,9 +117,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         userLong = (Double) locationSnapshot.child("location").child("longitude").getValue();
                                     }
                                 }
-
-                                DistanceCalculator distanceCalculator = new DistanceCalculator();
-                                Double distance = distanceCalculator.distance(productLat, productLong, userLat, userLong, "K");
+                                Double distance = null;
+                                try {
+                                    DistanceCalculator distanceCalculator = new DistanceCalculator();
+                                    distance = distanceCalculator.distance(productLat, productLong, userLat, userLong, "K");
+                                }
+                                catch (NullPointerException ignored){}
 
                                 if(userDistance>=distance) {
                                     Card card = new Card(MainActivity.this, product, null,
@@ -213,6 +216,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_add_product:
                 i = new Intent(MainActivity.this, AddProductActivity.class);
+                startActivity(i);
+                break;
+            case R.id.nav_messages:
+                i = new Intent(MainActivity.this, ChatHistoryActivity.class);
                 startActivity(i);
                 break;
             case R.id.nav_my_products:

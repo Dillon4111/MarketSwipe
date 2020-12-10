@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ChatActivity extends AppCompatActivity {
     ScrollView scrollView;
@@ -57,9 +58,9 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     String uid;
 
-    private String chatID = "1234";
+    String chatID;
 
-    private List<String> members = new ArrayList<>();
+    private List<String> members;
     private List<String> userChats = new ArrayList<>();
 
     private FloatingActionButton fab;
@@ -77,22 +78,32 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_room);
 
-        members.add(uid);
-        members.add(secondUID);
+        secondUID = null;
 
-        userChats.add(chatID);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        uid = mUser.getUid();
+
+        members = new ArrayList<>();
+
+        members.add(uid);
 
         fab = findViewById(R.id.fab);
         input = findViewById(R.id.input);
 
         Intent i = getIntent();
         secondUID = i.getExtras().getString("SECOND_ID");
+        chatID = i.getExtras().getString("CHAT_ID");
+
+        Log.d("SECOND UID CHATACTIVITY", secondUID);
+        Log.d("CHAT ID", chatID);
+
+        //userChats.add(chatID);
+
+        members.add(secondUID);
 
         scrollView = findViewById(R.id.scrollView);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        uid = mUser.getUid();
 
         DatabaseReference chatMessageRef = FirebaseDatabase.getInstance().getReference("Chat_Messages");
 
@@ -100,8 +111,8 @@ public class ChatActivity extends AppCompatActivity {
         userDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot userSnap: snapshot.getChildren()) {
-                    if(userSnap.getKey().equals(uid)) {
+                for (DataSnapshot userSnap : snapshot.getChildren()) {
+                    if (userSnap.getKey().equals(uid)) {
                         userName = userSnap.child("username").getValue().toString();
                     }
                 }
@@ -115,13 +126,21 @@ public class ChatActivity extends AppCompatActivity {
 
         FirebaseDatabase.getInstance()
                 .getReference("Chats")
-                .push()
+                .child(chatID)
                 .child("members").setValue(members);
+
 
         FirebaseDatabase.getInstance()
                 .getReference("User_Chats")
                 .child(uid)
-                .setValue(userChats);
+                .child(chatID)
+                .setValue(true);
+
+        FirebaseDatabase.getInstance()
+                .getReference("User_Chats")
+                .child(secondUID)
+                .child(chatID)
+                .setValue(true);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +149,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
                 Date dateobj = new Date();
-                final ChatMessage message = new ChatMessage(messageText, df.format(dateobj), uid, userName);
+                final ChatMessage message = new ChatMessage(messageText, df.format(dateobj), uid, userName, chatID);
 
                 FirebaseDatabase.getInstance()
                         .getReference("Chat_Messages")
@@ -141,43 +160,12 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
-//        chatMessageRef.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    Log.d("MESSAGE KEY", dataSnapshot.getKey());
-//                    if (dataSnapshot.getKey().equals(messageID)) {
-//                        Log.d("MESSAGE SNAP", dataSnapshot.getValue().toString());
-//                        Log.d("MESSAGE MESSAGE", dataSnapshot.child("message").getValue().toString());
-//                        ChatMessage chatMessage = new ChatMessage(dataSnapshot.child("message").getValue().toString(),
-//                                dataSnapshot.child("date").getValue().toString(),
-//                                dataSnapshot.child("uid").getValue().toString());
-//
-//                        Log.d("MESSAGE OBJECT", chatMessage.getMessage());
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        Log.d("CHATID", chatID);
         displayMessages();
     }
 
@@ -202,19 +190,28 @@ public class ChatActivity extends AppCompatActivity {
                 messageTime.setText(model.getDate());
 
                 input.setText("");
+                adapter.notifyDataSetChanged();
             }
         };
         listOfMessages.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         adapter.startListening();
     }
+
     @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

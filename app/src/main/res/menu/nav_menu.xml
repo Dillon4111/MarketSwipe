@@ -9,6 +9,10 @@
                 android:title="Add Product"
                 android:icon="@drawable/ic_add_product" />
             <item
+                android:id="@+id/nav_messages"
+                android:title="Messages"
+                android:icon="@drawable/ic_baseline_chat_24" />
+            <item
                 android:id="@+id/nav_my_products"
                 android:title="@string/my_products"
                 android:icon="@drawable/ic_baseline_folder_24" />

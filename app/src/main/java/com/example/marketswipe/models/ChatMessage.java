@@ -4,16 +4,17 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class ChatMessage {
-    String id, message, date, uid, userName;
+    String id, message, date, uid, userName, chatID;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(String message, String date, String uid, String userName) {
+    public ChatMessage(String message, String date, String uid, String userName, String chatID) {
         this.message = message;
         this.date = date;
         this.uid = uid;
         this.userName = userName;
+        this.chatID = chatID;
     }
 
     public String getId() {
@@ -54,5 +55,13 @@ public class ChatMessage {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getChatID() {
+        return chatID;
+    }
+
+    public void setChatID(String chatID) {
+        this.chatID = chatID;
     }
 }

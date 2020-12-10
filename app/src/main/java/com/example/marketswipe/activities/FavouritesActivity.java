@@ -78,28 +78,32 @@ public class FavouritesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot productSnapshot : snapshot.getChildren()) {
-                    if(productIds.contains(productSnapshot.getKey())) {
-                        String name = productSnapshot.child("name").getValue().toString();
-                        String price = productSnapshot.child("price").getValue().toString();
-                        String description = productSnapshot.child("description").getValue().toString();
-                        List<String> images = (List<String>) productSnapshot.child("images").getValue();
-                        String productID = productSnapshot.getKey();
-                        Product product = new Product();
-                        product.setId(productID);
-                        product.setName(name);
-                        product.setPrice(Double.parseDouble(price));
-                        product.setImages(images);
-                        product.setDescription(description);
-                        product.setCategory(productSnapshot.child("category").getValue().toString());
-                        product.setSub_category(productSnapshot.child("sub_category").getValue().toString());
-                        myDataset.add(product);
+                    try {
+                        if (productIds.contains(productSnapshot.getKey())) {
+                            String name = productSnapshot.child("name").getValue().toString();
+                            String price = productSnapshot.child("price").getValue().toString();
+                            String description = productSnapshot.child("description").getValue().toString();
+                            List<String> images = (List<String>) productSnapshot.child("images").getValue();
+                            String productID = productSnapshot.getKey();
+                            Product product = new Product();
+                            product.setId(productID);
+                            product.setName(name);
+                            product.setPrice(Double.parseDouble(price));
+                            product.setImages(images);
+                            product.setDescription(description);
+                            product.setCategory(productSnapshot.child("category").getValue().toString());
+                            product.setSub_category(productSnapshot.child("sub_category").getValue().toString());
+                            product.setUser_id(productSnapshot.child("user_id").getValue().toString());
+                            myDataset.add(product);
+                        }
                     }
+                    catch (NullPointerException ignored) {}
+                    }
+                    myRecyclerView.setLayoutManager(new LinearLayoutManager((FavouritesActivity.this)));
+                    myRecyclerView.setHasFixedSize(true);
+                    mAdapter = new MyFavouritesAdapter(myDataset, FavouritesActivity.this);
+                    myRecyclerView.setAdapter(mAdapter);
                 }
-                myRecyclerView.setLayoutManager(new LinearLayoutManager((FavouritesActivity.this)));
-                myRecyclerView.setHasFixedSize(true);
-                mAdapter= new MyFavouritesAdapter(myDataset, FavouritesActivity.this);
-                myRecyclerView.setAdapter(mAdapter);
-            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -107,28 +111,34 @@ public class FavouritesActivity extends AppCompatActivity {
             }
         });
 
-        Button textAjaiButon;
-        textAjaiButon = findViewById(R.id.chatWithAjaiButton);
+//        Button textAjaiButon;
+//        textAjaiButon = findViewById(R.id.chatWithAjaiButton);
+//
+//
+//        Button textDillonButon;
+//        textDillonButon = findViewById(R.id.chatWithDillonButton);
+//        textDillonButon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(FavouritesActivity.this, ChatActivity.class);
+//                i.putExtra("SECOND_ID", "Ue991QAog5XOJeGCqqIj7Rdfwux2");
+//                startActivity(i);
+//            }
+//        });
+//
+//        textAjaiButon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(FavouritesActivity.this, ChatActivity.class);
+//                i.putExtra("SECOND_ID", "TmtzOXawBCM5uWqY7ZVyxGmUjvf1");
+//                startActivity(i);
+//            }
+//        });
+    }
 
-
-        Button textDillonButon;
-        textDillonButon = findViewById(R.id.chatWithDillonButton);
-        textDillonButon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FavouritesActivity.this, ChatActivity.class);
-                i.putExtra("SECOND_ID", "Ue991QAog5XOJeGCqqIj7Rdfwux2");
-                startActivity(i);
-            }
-        });
-
-        textAjaiButon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FavouritesActivity.this, ChatActivity.class);
-                i.putExtra("SECOND_ID", "TmtzOXawBCM5uWqY7ZVyxGmUjvf1");
-                startActivity(i);
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
