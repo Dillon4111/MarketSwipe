@@ -34,7 +34,7 @@ import java.util.UUID;
 
 public class MyChatsAdapter extends RecyclerView.Adapter<MyChatsAdapter.MyViewHolder> {
     private ArrayList<ChatMessage> mylistvalues;
-    private DatabaseReference userDB, chatsDB;
+    private DatabaseReference chatsDB;
     private StorageReference storageReference;
     private Context context;
     private FirebaseAuth mAuth;
@@ -73,11 +73,13 @@ public class MyChatsAdapter extends RecyclerView.Adapter<MyChatsAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         //        final FirebaseStorage storage = FirebaseStorage.getInstance();
 //        storageReference = storage.getReference();
+
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
+        secondUID = null;
+
         final ChatMessage chatMessage = mylistvalues.get(position);
-        userDB = FirebaseDatabase.getInstance().getReference("Users");
         chatsDB = FirebaseDatabase.getInstance().getReference("Chats");
         chatsDB.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,29 +89,36 @@ public class MyChatsAdapter extends RecyclerView.Adapter<MyChatsAdapter.MyViewHo
                         List<String> ids = (List<String>) chatSnap.child("members").getValue();
                         if (ids.get(0).equals(mUser.getUid()))
                             secondUID = ids.get(1);
-                        else
+                        else if (!ids.get(0).equals(mUser.getUid()))
                             secondUID = ids.get(0);
 
-                        userDB.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot userSnap : snapshot.getChildren()) {
-                                    if (userSnap.getKey().equals(secondUID)) {
-                                        holder.nameView.setText(userSnap.child("username").getValue().toString());
-                                        holder.messageView.setText(chatMessage.getMessage());
-                                        holder.timeView.setText(chatMessage.getDate());
-                                        Log.d("HEYHEYHEY", secondUID);
+                        Log.d("HEYHEYHEY", secondUID);
 
-                                        break;
-                                    }
-                                }
-                            }
+                        break;
+                    }
+                }
+            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+            }
+        });
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("Users");
+        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot userSnap : snapshot.getChildren()) {
+                    if (userSnap.getKey().equals(secondUID)) {
+                        holder.nameView.setText(userSnap.child("username").getValue().toString());
+                        holder.messageView.setText(chatMessage.getMessage());
+                        holder.timeView.setText(chatMessage.getDate());
 
                         break;
                     }
@@ -130,8 +139,9 @@ public class MyChatsAdapter extends RecyclerView.Adapter<MyChatsAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("SECONDUIUIUIUI", secondUID);
                 DatabaseReference chatsDB = FirebaseDatabase.getInstance().getReference("Chats");
-                chatID = UUID.randomUUID().toString();
+                //chatID = UUID.randomUUID().toString();
                 chatsDB.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

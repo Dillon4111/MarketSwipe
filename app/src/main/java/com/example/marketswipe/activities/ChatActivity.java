@@ -172,7 +172,7 @@ public class ChatActivity extends AppCompatActivity {
     public void displayMessages() {
         Query query = FirebaseDatabase.getInstance().getReference().child("Chat_Messages").child(chatID);
         ListView listOfMessages = findViewById(R.id.list_of_messages);
-        FirebaseListOptions<ChatMessage> options =
+        final FirebaseListOptions<ChatMessage> options =
                 new FirebaseListOptions.Builder<ChatMessage>()
                         .setQuery(query, ChatMessage.class)
                         .setLayout(R.layout.message)
@@ -180,7 +180,7 @@ public class ChatActivity extends AppCompatActivity {
         adapter = new FirebaseListAdapter<ChatMessage>(options) {
             @Override
             protected void populateView(@NotNull View v, @NotNull ChatMessage model, int position) {
-                DatabaseReference chatMessageRef = FirebaseDatabase.getInstance().getReference("Users");
+//                DatabaseReference chatMessageRef = FirebaseDatabase.getInstance().getReference("Users");
 
                 TextView messageText = v.findViewById(R.id.message_text);
                 TextView messageUser = v.findViewById(R.id.message_user);
@@ -190,11 +190,12 @@ public class ChatActivity extends AppCompatActivity {
                 messageTime.setText(model.getDate());
 
                 input.setText("");
+
                 adapter.notifyDataSetChanged();
             }
         };
         listOfMessages.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+//        adapter.notifyDataSetChanged();
     }
 
     @Override

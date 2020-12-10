@@ -59,8 +59,6 @@ public class ChatHistoryActivity extends AppCompatActivity {
                         for(DataSnapshot chatidSnap: chatSnap.getChildren()) {
                             chatIDs.add(chatidSnap.getKey());
                         }
-//                        chatIDs = (List<String>) chatSnap.getValue();
-//                        Log.d("CHATSNAP", chatIDs.toString());
                     }
                 }
             }
@@ -86,6 +84,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
                                 message.setUserName(messageSnap.child("userName").getValue().toString());
                                 message.setChatID(messageSnap.child("chatID").getValue().toString());
                             }
+                            break;
                         }
                     }
                     lastMessages.add(message);

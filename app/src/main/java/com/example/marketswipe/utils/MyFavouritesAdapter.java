@@ -77,6 +77,7 @@ public class MyFavouritesAdapter extends RecyclerView.Adapter<MyFavouritesAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("FAVOURITES PRODUCT", product.getName());
                 Intent intent = new Intent(context, ProductDetailsActivity.class);
                 intent.putExtra("PRODUCT_INTENT", product);
                 context.startActivity(intent);
