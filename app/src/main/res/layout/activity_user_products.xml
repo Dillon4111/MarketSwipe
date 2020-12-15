@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ChatHistoryActivity">
+    tools:context=".activities.UserProductsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myChatHistoryRecyclerView"
-        android:layout_width="390dp"
-        android:layout_height="612dp"
+        android:id="@+id/userProductsRecyclerView"
+        android:layout_width="375dp"
+        android:layout_height="633dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.68" />
+        app:layout_constraintVertical_bias="0.683" />
 
     <ImageButton
-        android:id="@+id/chatHistoryBackButton"
+        android:id="@+id/userProductsBackButton"
         android:layout_width="52dp"
         android:layout_height="43dp"
         android:layout_marginStart="16dp"

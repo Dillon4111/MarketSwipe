@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -297,6 +298,16 @@ public class AddProductActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ImageButton backButton = findViewById(R.id.addProductBackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(AddProductActivity.this, MainActivity.class);
+                finish();
+                startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -400,5 +411,6 @@ public class AddProductActivity extends AppCompatActivity {
         }
         return imageUploadSuccess;
     }
+
 }
 

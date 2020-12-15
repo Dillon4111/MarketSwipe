@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.example.marketswipe.R;
 import com.example.marketswipe.models.ChatMessage;
@@ -40,6 +43,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_history);
+
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -105,6 +109,15 @@ public class ChatHistoryActivity extends AppCompatActivity {
             }
         });
 
+        ImageButton backButton = findViewById(R.id.chatHistoryBackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ChatHistoryActivity.this, MainActivity.class);
+                finish();
+                startActivity(i);
+            }
+        });
     }
 
     @Override

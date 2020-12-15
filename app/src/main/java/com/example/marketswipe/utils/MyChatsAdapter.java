@@ -173,6 +173,7 @@ public class MyChatsAdapter extends RecyclerView.Adapter<MyChatsAdapter.MyViewHo
                                 Intent i = new Intent(context, ChatActivity.class);
                                 i.putExtra("SECOND_ID", secondUID);
                                 i.putExtra("CHAT_ID", chatID);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 context.startActivity(i);
                             }
                             @Override

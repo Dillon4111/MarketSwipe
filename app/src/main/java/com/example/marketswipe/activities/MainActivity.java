@@ -223,7 +223,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i);
                 break;
             case R.id.nav_my_products:
-                Log.i("Menu", "1");
+                i = new Intent(MainActivity.this, UserProductsActivity.class);
+                startActivity(i);
                 break;
             case R.id.nav_favourites:
                 i = new Intent(MainActivity.this, FavouritesActivity.class);
@@ -247,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
+        finish();
 
         return true;
     }
