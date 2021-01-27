@@ -123,7 +123,7 @@ public class Card {
                         } else {
                             Log.d("ELSE", "HELLO");
                         }
-                        Log.d("FAVS", favs.toString());
+                        //Log.d("FAVS", favs.toString());
                         Log.d("User ID", uid);
                         Log.d("P ID", mProduct.getId());
 
