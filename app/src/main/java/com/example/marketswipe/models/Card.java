@@ -88,7 +88,7 @@ public class Card {
     @SwipeOut
     private void onSwipedOut() {
         Log.d("EVENT", "onSwipedOut");
-        mSwipeView.addView(this);
+        //mSwipeView.addView(this);
     }
 
     @SwipeCancelState
@@ -99,7 +99,7 @@ public class Card {
     @SwipeIn
     private void onSwipeIn() {
         Log.d("EVENT", "onSwipedIn");
-        mSwipeView.addView(this);
+        //mSwipeView.addView(this);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();

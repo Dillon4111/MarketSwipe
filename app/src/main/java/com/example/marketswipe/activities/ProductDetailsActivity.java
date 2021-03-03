@@ -1,5 +1,6 @@
 package com.example.marketswipe.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -7,8 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.marketswipe.R;
+import com.example.marketswipe.config.Config;
 import com.example.marketswipe.models.AmazonProduct;
 import com.example.marketswipe.models.GalleryImage;
 import com.example.marketswipe.models.Product;
@@ -32,12 +36,19 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mindorks.placeholderview.PlaceHolderView;;import org.jsoup.Jsoup;
+import com.mindorks.placeholderview.PlaceHolderView;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;;import org.json.JSONException;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,13 +62,16 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView productName, productPrice, productCategory, productSubCategory, productDescription;
     private StorageReference storageReference;
     Product product;
-    private Button messageSellerButton;
+    private Button messageSellerButton, buyButton;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     String chatID;
     RecyclerView myRecyclerView;
     private WebResultsAdapter mAdapter;
     private ArrayList<Product> myDataset = new ArrayList<Product>();
+    private static PayPalConfiguration config = new PayPalConfiguration()
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(Config.PAYPAL_CLIENT_ID);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +150,19 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
+        buyButton = findViewById(R.id.buyNowButton);
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductDetailsActivity.this, PayPalService.class);
+                intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
+                startService(intent);
+
+                processPayment();
+            }
+        });
+
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         StrictMode.setThreadPolicy(policy);
@@ -150,10 +177,44 @@ public class ProductDetailsActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        myDataset.add(getDoneDealProduct());
         myRecyclerView.setLayoutManager(new LinearLayoutManager((ProductDetailsActivity.this)));
         myRecyclerView.setHasFixedSize(true);
         mAdapter = new WebResultsAdapter(myDataset, ProductDetailsActivity.this);
         myRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void processPayment() {
+        String amount = String.valueOf(product.getPrice());
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(amount)),"EUR",
+                "Purchase Goods",PayPalPayment.PAYMENT_INTENT_SALE);
+        Intent intent = new Intent(ProductDetailsActivity.this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
+
+        startActivityForResult(intent,7777);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 7777) {
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirmation != null) {
+                    try {
+                        String paymentDetails = confirmation.toJSONObject().toString(4);
+                        startActivity(new Intent(this, PaymentDetails.class)
+                                .putExtra("Payment Details", paymentDetails)
+                                .putExtra("Amount", String.valueOf(product.getPrice())));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED)
+                Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+        } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
+            Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -192,7 +253,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             String url = link.attr("href");
             Log.d("EBAY URL", url);
 
-            ebayProduct = new Product(name, price, url, absoluteUrl);
+            ebayProduct = new Product(name, price, url, absoluteUrl, "ebay");
 
             break;
         }
@@ -231,9 +292,43 @@ public class ProductDetailsActivity extends AppCompatActivity {
             product.setWebPrice(amazonProduct.getPrice());
             product.setWebUrl(amazonProduct.getDetailPageURL());
             product.setImageUrl(amazonProduct.getImageUrl());
+            product.setSite("amazon");
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        return product;
+    }
+
+    public Product getDoneDealProduct() {
+        Product product = null;
+        String productName = this.product.getName();
+        Document doc = null;
+        {
+            try {
+                doc = Jsoup.connect("https://www.donedeal.ie/all?words=" + productName).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Elements allDiv = doc.getElementsByClass("card-item");
+
+        for (Element span : allDiv) {
+            String name = span.getElementsByClass("card__body-title").text();
+
+            Element imageElement = span.select("img").first();
+            String absoluteUrl = imageElement.absUrl("src");
+
+            String price = span.getElementsByClass("card__price").text();
+
+            Element link = span.select("li.card-item > a").first();
+            String url = link.attr("href");
+
+            product = new Product(name, price, url, absoluteUrl, "donedeal");
+
+            break;
         }
 
         return product;

@@ -64,7 +64,17 @@ public class WebResultsAdapter extends RecyclerView.Adapter<WebResultsAdapter.My
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Product product = mylistvalues.get(position);
-        holder.nameView.setText(product.getName());
+
+        if(product.getSite().equals("ebay")) {
+            holder.nameView.setText("eBay:\n" + product.getName());
+        }
+        else if(product.getSite().equals("donedeal")) {
+            holder.nameView.setText("DoneDeal:\n" + product.getName());
+        }
+        else{
+            holder.nameView.setText("Amazon:\n" + product.getName());
+        }
+
         holder.priceView.setText(product.getWebPrice());
 
         Picasso.get().load(product.getImageUrl()).into(holder.imageView);

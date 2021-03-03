@@ -15,7 +15,7 @@ public class Product implements Serializable {
     private String name, description, category, sub_category;
     private double price;
     private List<String> images;
-    private String gps_location, webUrl, webPrice, imageUrl;
+    private String gps_location, webUrl, webPrice, imageUrl, site;
 
     public Product() {
     }
@@ -31,11 +31,12 @@ public class Product implements Serializable {
         this.images = images;
     }
 
-    public Product(String name, String price, String webUrl, String imageUrl) {
+    public Product(String name, String price, String webUrl, String imageUrl, String site) {
         this.name = name;
         this.webPrice = price;
         this.webUrl = webUrl;
         this.imageUrl = imageUrl;
+        this.site = site;
     }
 
     public String getId() {
@@ -140,5 +141,13 @@ public class Product implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
     }
 }
