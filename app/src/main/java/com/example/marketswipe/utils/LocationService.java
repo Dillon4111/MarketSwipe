@@ -19,7 +19,7 @@ public class LocationService extends Service {
 
     private static final String TAG = "BOOMBOOMTESTGPS";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 1000;
+    private static final int LOCATION_INTERVAL = 10;
     private static final float LOCATION_DISTANCE = 10f;
 
     private FirebaseAuth mAuth;
@@ -45,9 +45,6 @@ public class LocationService extends Service {
                     .getInstance().getReference("User_Location").child(uid);
 
             databaseReference.child("location").setValue(location);
-//            Log.i(TAG, "onLocationChanged: " + location);
-//            Log.i(TAG, "Latitude: " + location.getLatitude());
-//            Log.i(TAG, "Longitude: " + location.getLongitude());
             mLastLocation.set(location);
         }
 

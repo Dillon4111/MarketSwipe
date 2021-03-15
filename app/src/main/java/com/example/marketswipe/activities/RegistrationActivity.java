@@ -1,8 +1,12 @@
 package com.example.marketswipe.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.marketswipe.R;
 import com.example.marketswipe.models.User;
@@ -32,8 +37,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private DatabaseReference db;
     private EditText userNameEdit, emailEdit, passwordEdit, confPasswordEdit;
-    private Button registerButton;
-    private TextView signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +44,13 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         mAuth = FirebaseAuth.getInstance();
-        db= FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance().getReference();
 
         userNameEdit = findViewById(R.id.registerName);
         emailEdit = findViewById(R.id.registerEmail);
         passwordEdit = findViewById(R.id.registerPassword);
         confPasswordEdit = findViewById(R.id.registerConfirmPassword);
-        registerButton = findViewById(R.id.registerButton);
+        Button registerButton = findViewById(R.id.registerButton);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,8 +60,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 final String password = passwordEdit.getText().toString();
                 String confPassword = confPasswordEdit.getText().toString();
 
-                if(userName.matches("") || email.matches("") ||
-                        password.matches("") || confPassword.matches("")){
+                if (userName.matches("") || email.matches("") ||
+                        password.matches("") || confPassword.matches("")) {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(RegistrationActivity.this);
 
                     dlgAlert.setMessage("Please fill in all fields");
@@ -73,12 +76,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                 }
                             });
-                }
-                else if(password.length() < 6) {
+                } else if (password.length() < 6) {
                     passwordEdit.setError("Password must be 6 characters or more");
                     passwordEdit.requestFocus();
-                }
-                else if(!password.equals(confPassword)){
+                } else if (!password.equals(confPassword)) {
                     AlertDialog.Builder dlgAlert = new AlertDialog.Builder(RegistrationActivity.this);
 
                     dlgAlert.setMessage("Passwords are not the same");
@@ -93,8 +94,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                 }
                             });
-                }
-                else {
+                } else {
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -103,7 +103,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                         Log.d("Register", "createUserWithEmail:success");
                                         mUser = mAuth.getCurrentUser();
                                         User user = new User(userName, email);
-                                        String uid = mUser.getUid();
+                                        final String uid = mUser.getUid();
                                         db.child("Users").child(uid).setValue(user)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
@@ -130,7 +130,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        signInButton = findViewById(R.id.backToSignIn);
+        TextView signInButton = findViewById(R.id.backToSignIn);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

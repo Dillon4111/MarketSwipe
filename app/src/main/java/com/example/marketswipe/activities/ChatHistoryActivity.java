@@ -30,12 +30,8 @@ import java.util.List;
 public class ChatHistoryActivity extends AppCompatActivity {
 
     private FirebaseUser mUser;
-    private FirebaseAuth mAuth;
-
     private MyChatsAdapter mAdapter;
     RecyclerView myRecyclerView;
-
-    private DatabaseReference usersDB, chatsDB, messagesDB;
     private List<String> chatIDs = new ArrayList<>();
     private ArrayList<ChatMessage> lastMessages = new ArrayList<>();
 
@@ -45,7 +41,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_history);
 
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
         myRecyclerView= (RecyclerView) findViewById(R.id.myChatHistoryRecyclerView);
@@ -53,7 +49,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
         LinearLayoutManager myLayoutManager= new LinearLayoutManager(this);
         myRecyclerView.setLayoutManager(myLayoutManager);
 
-        chatsDB = FirebaseDatabase.getInstance().getReference("User_Chats");
+        DatabaseReference chatsDB = FirebaseDatabase.getInstance().getReference("User_Chats");
         chatsDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -73,7 +69,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
             }
         });
 
-        messagesDB = FirebaseDatabase.getInstance().getReference("Chat_Messages");
+        DatabaseReference messagesDB = FirebaseDatabase.getInstance().getReference("Chat_Messages");
         messagesDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -92,8 +88,6 @@ public class ChatHistoryActivity extends AppCompatActivity {
                         }
                     }
                     lastMessages.add(message);
-//                    Log.d("LASTMESSAGE", message.getMessage());
-//                    Log.d("SECOND ID ID ID", message.getUid());
                 }
                 myRecyclerView.setLayoutManager(new LinearLayoutManager((ChatHistoryActivity.this)));
                 myRecyclerView.setHasFixedSize(true);
@@ -123,6 +117,8 @@ public class ChatHistoryActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent i = new Intent(ChatHistoryActivity.this, MainActivity.class);
         finish();
+        startActivity(i);
     }
 }

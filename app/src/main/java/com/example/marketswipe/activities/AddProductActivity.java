@@ -61,15 +61,13 @@ public class AddProductActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private DatabaseReference db;
-    private DatabaseReference categoriesDB, subCategoriesDB;
+    private DatabaseReference subCategoriesDB;
     private Spinner catSpinner, subCatSpinner;
     private List<String> categories, subCategories;
     private TextView counter;
     private EditText editName, editPrice, editDescription;
-    private Button addProductButton, chooseImagesButton;
     private List<Uri> uriList;
     private List<String> images;
-    private List<ImageView> imageViews;
     FirebaseStorage storage;
     StorageReference storageReference;
 
@@ -88,7 +86,7 @@ public class AddProductActivity extends AppCompatActivity {
         subCategories = new ArrayList<String>();
         subCategories.add("*Select Sub-Category...");
 
-        categoriesDB = FirebaseDatabase.getInstance().getReference("Categories");
+        DatabaseReference categoriesDB = FirebaseDatabase.getInstance().getReference("Categories");
         categoriesDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -205,7 +203,7 @@ public class AddProductActivity extends AppCompatActivity {
         editPrice = findViewById(R.id.editProductPrice);
         editDescription = findViewById(R.id.editDescription);
         counter = findViewById(R.id.counter);
-        addProductButton = findViewById(R.id.addProductButton);
+        Button addProductButton = findViewById(R.id.addProductButton);
 
         TextWatcher mTextEditorWatcher = new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -222,7 +220,7 @@ public class AddProductActivity extends AppCompatActivity {
         editDescription.addTextChangedListener(mTextEditorWatcher);
 
 
-        chooseImagesButton = findViewById(R.id.chooseImagesButton);
+        Button chooseImagesButton = findViewById(R.id.chooseImagesButton);
         chooseImagesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,7 +317,7 @@ public class AddProductActivity extends AppCompatActivity {
             final ImageView imageView2 = findViewById(R.id.imageView2);
             final ImageView imageView3 = findViewById(R.id.imageView3);
             final ImageView imageView4 = findViewById(R.id.imageView4);
-            imageViews = new ArrayList<>();
+            List<ImageView> imageViews = new ArrayList<>();
             imageViews.add(imageView1);
             imageViews.add(imageView2);
             imageViews.add(imageView3);

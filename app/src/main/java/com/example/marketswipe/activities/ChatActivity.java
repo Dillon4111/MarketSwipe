@@ -54,16 +54,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private EditText input;
 
-    private FirebaseUser mUser;
-    private FirebaseAuth mAuth;
     String uid;
 
     String chatID;
 
-    private List<String> members;
     private List<String> userChats = new ArrayList<>();
 
-    private FloatingActionButton fab;
     private FirebaseListAdapter<ChatMessage> adapter;
 
     private String messageID;
@@ -80,15 +76,16 @@ public class ChatActivity extends AppCompatActivity {
 
         secondUID = null;
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        assert mUser != null;
         uid = mUser.getUid();
 
-        members = new ArrayList<>();
+        List<String> members = new ArrayList<>();
 
         members.add(uid);
 
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         input = findViewById(R.id.input);
 
         Intent i = getIntent();
@@ -209,13 +206,5 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(ChatActivity.this, ChatHistoryActivity.class);
-        startActivity(i);
-        finish();
     }
 }

@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -28,9 +29,10 @@ import com.google.firebase.database.ValueEventListener;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private MarkerOptions marker = new MarkerOptions().title("");
+    //private MarkerOptions marker = new MarkerOptions().title("");
+    private boolean found = false;
+    private int markerCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
     }
 
@@ -58,6 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        mMap.clear();
         final String[] name = new String[1];
 
         DatabaseReference locationDB = FirebaseDatabase.getInstance().getReference("User_Location");
@@ -65,41 +68,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (final DataSnapshot locationSnapshot : snapshot.getChildren()) {
-//                    if (mUser.getUid().equals(locationSnapshot.getKey())) {
 
-                    DatabaseReference locationDB = FirebaseDatabase.getInstance().getReference("Users");
+                    final DatabaseReference locationDB = FirebaseDatabase.getInstance().getReference("Users");
                     locationDB.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot lSnapshot : snapshot.getChildren()) {
-                                if (marker.getTitle().equals("") && lSnapshot.getKey().equals(mUser.getUid())) {
-                                    Double userLat = (Double) locationSnapshot.child("location").child("latitude").getValue();
-                                    Double userLong = (Double) locationSnapshot.child("location").child("longitude").getValue();
+                                if(markerCount==snapshot.getChildrenCount()){
+                                    break;
+                                }
+                              if (locationSnapshot.getKey().equals(lSnapshot.getKey())) {
 
-                                    // mMap.clear();
-                                    LatLng user = new LatLng(userLat, userLong);
-                                    //mMap.addMarker(new MarkerOptions().position(user).title("You"));
-                                    marker.position(user).title("You");
-                                    mMap.addMarker(marker);
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
-
-                                } else if (lSnapshot.getKey().equals(mUser.getUid())) {
-                                    Double userLat = (Double) locationSnapshot.child("location").child("latitude").getValue();
-                                    Double userLong = (Double) locationSnapshot.child("location").child("longitude").getValue();
-
-                                    marker.position(new LatLng(userLat, userLong));
-
-                                    Log.d("TAGGGGGGG", "HELLLOOOOOOOO");
-                                } else if (locationSnapshot.getKey().equals(lSnapshot.getKey())) {
                                     name[0] = lSnapshot.child("username").getValue().toString();
 
                                     Double userLat = (Double) locationSnapshot.child("location").child("latitude").getValue();
                                     Double userLong = (Double) locationSnapshot.child("location").child("longitude").getValue();
 
-                                    // mMap.clear();
                                     LatLng user = new LatLng(userLat, userLong);
-                                    mMap.addMarker(new MarkerOptions().position(user).title(name[0]));
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+                                    MarkerOptions marker = new MarkerOptions().position(user).title(name[0]);
+                                    mMap.addMarker(marker);
+                                    markerCount++;
+
+                                    if((lSnapshot.getKey().equals(mUser.getUid()))) {
+                                      mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+
+
+                                      CameraPosition cameraPosition = new CameraPosition.Builder()
+                                              .target(user)      // Sets the center of the map to location user
+                                              .zoom(15)                   // Sets the zoom
+                                              .build();                   // Creates a CameraPosition from the builder
+                                      mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                  }
                                 }
                             }
                         }
@@ -110,7 +109,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     });
                 }
-
             }
 
             @Override

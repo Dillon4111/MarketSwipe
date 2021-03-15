@@ -98,4 +98,19 @@ public class User {
     public void setProductIds(List<String> productIds) {
         this.favourites = productIds;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid='" + uid + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", facebookid='" + facebookid + '\'' +
+                ", gpslocation='" + gpslocation + '\'' +
+                ", num_ratings=" + num_ratings +
+                ", rating=" + rating +
+                ", distance=" + distance +
+                ", favourites=" + favourites +
+                '}';
+    }
 }

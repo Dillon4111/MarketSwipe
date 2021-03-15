@@ -117,9 +117,7 @@ public class UserProductsActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(UserProductsActivity.this, MainActivity.class);
                 finish();
-                startActivity(i);
             }
         });
     }
