@@ -236,7 +236,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         }
 
-        Elements allDiv = doc.getElementsByClass("s-item    ");
+        Elements allDiv = doc.getElementsByClass("s-item     ");
 
         for (Element span : allDiv) {
             String name = span.getElementsByTag("h3").text();
@@ -280,7 +280,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             response = client.newCall(request).execute();
 
             String responseBodyString = response.body().string();
-            Log.d("RESPONSE", responseBodyString);
+            Log.d("AMAZON RESPONSE", responseBodyString);
 
             List<AmazonProduct> resultList = new Gson().fromJson(responseBodyString, new TypeToken<ArrayList<AmazonProduct>>(){}.getType());
 
@@ -330,6 +330,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
             break;
         }
+
+        Log.d("DONEDEAL PRODUCT", product.toString());
 
         return product;
     }

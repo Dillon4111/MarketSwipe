@@ -64,6 +64,10 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
 
         mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() != null) {
+            checkLocationSettings();
+            return;
+        }
         db = FirebaseDatabase.getInstance().getReference();
 
         checkGPSIsOn();

@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     Double productLat, productLong, userLat, userLong, userDistance;
     Long userDistanceLong;
+    FirebaseAuth mAuth;
 
 
     @Override
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         uid = mUser.getUid();
 
@@ -178,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i);
                 break;
             case R.id.nav_log_out:
+                mAuth.signOut();
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(MainActivity.this, "User signed out", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, SignInActivity.class);
