@@ -1,7 +1,6 @@
 package com.example.marketswipe.utils;
 
 import android.util.Log;
-
 import com.example.marketswipe.models.AmazonProduct;
 import com.example.marketswipe.models.Product;
 import com.google.gson.Gson;
@@ -30,7 +29,6 @@ public class ProductSearch {
 
     public Product getEbayProduct() {
         Product ebayProduct = null;
-        //String productName = product.getName();
         Document doc = null;
         {
             try {
@@ -71,8 +69,6 @@ public class ProductSearch {
         Product product = new Product();
         OkHttpClient client = new OkHttpClient();
 
-        //String productName = this.product.getName();
-
         Request request = new Request.Builder()
                 .url("https://amazon-price1.p.rapidapi.com/search?keywords=" + productName + "&marketplace=GB")
                 .get()
@@ -92,8 +88,6 @@ public class ProductSearch {
 
             AmazonProduct amazonProduct = resultList.get(0);
 
-            Log.d("TOSTRING", amazonProduct.toString());
-
             product.setName(amazonProduct.getTitle());
             product.setWebPrice(amazonProduct.getPrice());
             product.setWebUrl(amazonProduct.getDetailPageURL());
@@ -111,7 +105,6 @@ public class ProductSearch {
 
     public Product getDoneDealProduct() {
         Product product = null;
-        //String productName = this.product.getName();
         Document doc = null;
         {
             try {
