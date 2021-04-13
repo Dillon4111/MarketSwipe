@@ -81,7 +81,7 @@ public class Card {
                 .load(mRef)
                 .placeholder(circularProgressDrawable)
                 .into(productImageView);
-        productInfoTxt.setText(mProduct.getName() + ", " + mProduct.getPrice());
+        productInfoTxt.setText(mProduct.getName() + ", €" + mProduct.getPrice());
         locationTxt.setText(String.format("%1$,.2f", mLocation) + "km");
     }
 

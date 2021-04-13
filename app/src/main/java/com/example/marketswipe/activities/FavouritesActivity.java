@@ -39,13 +39,11 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class FavouritesActivity extends AppCompatActivity {
 
     private FirebaseUser mUser;
-    private FirebaseAuth mAuth;
 
     private ArrayList<Product> myDataset= new ArrayList<Product>();
     private MyFavouritesAdapter mAdapter;
     RecyclerView myRecyclerView;
 
-    private DatabaseReference usersDB, productsDB;
     private List<String> productIds = new ArrayList<>();
 
     @Override
@@ -53,7 +51,7 @@ public class FavouritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourites);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
         myRecyclerView= (RecyclerView) findViewById(R.id.myFavouritesRecyclerView);
@@ -61,7 +59,7 @@ public class FavouritesActivity extends AppCompatActivity {
         LinearLayoutManager myLayoutManager= new LinearLayoutManager(this);
         myRecyclerView.setLayoutManager(myLayoutManager);
 
-        usersDB = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference usersDB = FirebaseDatabase.getInstance().getReference("Users");
         usersDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -79,7 +77,7 @@ public class FavouritesActivity extends AppCompatActivity {
             }
         });
 
-        productsDB = FirebaseDatabase.getInstance().getReference("Products");
+        DatabaseReference productsDB = FirebaseDatabase.getInstance().getReference("Products");
         productsDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -61,15 +61,10 @@ import okhttp3.Response;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
-    private TextView productName, productPrice, productCategory, productSubCategory, productDescription;
-    private StorageReference storageReference;
     Product product;
-    private Button messageSellerButton, buyButton;
-    private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     String chatID;
     RecyclerView myRecyclerView;
-    private WebResultsAdapter mAdapter;
     private ArrayList<Product> myDataset = new ArrayList<Product>();
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
@@ -80,21 +75,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productdetails);
 
-//        getSupportActionBar().hide();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
         Intent i = getIntent();
         product = (Product) i.getSerializableExtra("PRODUCT_INTENT");
 
-        productName = findViewById(R.id.productName);
-        productPrice = findViewById(R.id.productPrice);
-        productCategory = findViewById(R.id.productCategory);
-        productSubCategory = findViewById(R.id.productSubCategory);
-        productDescription = findViewById(R.id.productDescription);
+        TextView productName = findViewById(R.id.productName);
+        TextView productPrice = findViewById(R.id.productPrice);
+        TextView productCategory = findViewById(R.id.productCategory);
+        TextView productSubCategory = findViewById(R.id.productSubCategory);
+        TextView productDescription = findViewById(R.id.productDescription);
 
         productName.setText(product.getName());
-        productPrice.setText(String.valueOf(product.getPrice()));
+        productPrice.setText("€" + product.getPrice());
         productCategory.setText(product.getCategory());
         productSubCategory.setText(product.getSub_category());
         productDescription.setText(product.getDescription());
@@ -109,17 +103,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         ProductDetailsActivity.this,
                         LinearLayoutManager.HORIZONTAL,
                         false));
-        //new GridLayoutManager(this, 4));
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        StorageReference storageReference = storage.getReference();
 
         for (String url : product.getImages()) {
-
             phvGallery.addView(new GalleryImage(getApplicationContext(), storageReference.child(url)));
         }
 
-        messageSellerButton = findViewById(R.id.messageSellerButton);
+        Button messageSellerButton = findViewById(R.id.messageSellerButton);
         messageSellerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +121,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot chatSnap : snapshot.getChildren()) {
-                            List<String> members = new ArrayList<>();
+                            List<String> members;
                             members = (List<String>) chatSnap.child("members").getValue();
                             if (members.contains(mUser.getUid()) && members.contains(product.getUser_id())) {
                                 chatID = chatSnap.getKey();
@@ -152,7 +144,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
-        buyButton = findViewById(R.id.buyNowButton);
+        Button buyButton = findViewById(R.id.buyNowButton);
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,13 +177,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         myRecyclerView.setLayoutManager(new LinearLayoutManager((ProductDetailsActivity.this)));
         myRecyclerView.setHasFixedSize(true);
-        mAdapter = new WebResultsAdapter(myDataset, ProductDetailsActivity.this);
+        WebResultsAdapter mAdapter = new WebResultsAdapter(myDataset, ProductDetailsActivity.this);
         myRecyclerView.setAdapter(mAdapter);
     }
 
     private void processPayment() {
         String amount = String.valueOf(product.getPrice());
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(amount)),"EUR",
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(amount),"EUR",
                 "Purchase Goods",PayPalPayment.PAYMENT_INTENT_SALE);
         Intent intent = new Intent(ProductDetailsActivity.this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);

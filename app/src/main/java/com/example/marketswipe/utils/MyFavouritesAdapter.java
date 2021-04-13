@@ -22,8 +22,6 @@ import java.util.ArrayList;
 
 public class MyFavouritesAdapter extends RecyclerView.Adapter<MyFavouritesAdapter.MyViewHolder> {
     private ArrayList<Product> mylistvalues;
-    private DatabaseReference userDB;
-    private StorageReference storageReference;
     private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -56,11 +54,11 @@ public class MyFavouritesAdapter extends RecyclerView.Adapter<MyFavouritesAdapte
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final FirebaseStorage storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        StorageReference storageReference = storage.getReference();
 
         final Product product = mylistvalues.get(position);
         holder.nameView.setText(product.getName());
-        holder.priceView.setText(Double.toString(product.getPrice()));
+        holder.priceView.setText("€" + product.getPrice());
 
         GlideApp.with(context)
                 .load(storageReference.child(product.getImages().get(0)))
