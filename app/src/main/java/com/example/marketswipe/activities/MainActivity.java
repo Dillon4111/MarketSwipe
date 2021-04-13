@@ -29,6 +29,7 @@ import com.example.marketswipe.R;
 import com.example.marketswipe.models.Card;
 import com.example.marketswipe.models.Product;
 import com.example.marketswipe.utils.DistanceCalculator;
+import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -170,6 +171,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 i = new Intent(MainActivity.this, FavouritesActivity.class);
                 startActivity(i);
                 break;
+            case R.id.nav_analyse_prices:
+                i = new Intent(MainActivity.this, AnalysePricesActivity.class);
+                startActivity(i);
+                break;
             case R.id.map:
                 i = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(i);
@@ -181,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_log_out:
                 mAuth.signOut();
                 FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
                 Toast.makeText(MainActivity.this, "User signed out", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, SignInActivity.class);
                 finish();
@@ -189,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
-        finish();
 
         return true;
     }

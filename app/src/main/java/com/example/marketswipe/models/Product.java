@@ -1,7 +1,5 @@
 package com.example.marketswipe.models;
 
-import android.net.Uri;
-
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
