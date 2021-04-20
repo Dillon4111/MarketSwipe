@@ -36,12 +36,10 @@ public class MyChatsAdapter extends RecyclerView.Adapter<MyChatsAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameView, messageView, timeView;
-        private ImageView imageView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             nameView = itemView.findViewById(R.id.userNameChats);
-            imageView = itemView.findViewById(R.id.imageViewChats);
             messageView = itemView.findViewById(R.id.messageChats);
             timeView = itemView.findViewById(R.id.messageTimeChats);
         }

@@ -7,17 +7,20 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.emredavarci.noty.Noty;
 import com.example.marketswipe.R;
 import com.example.marketswipe.config.Config;
 import com.example.marketswipe.models.AmazonProduct;
@@ -67,7 +70,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     RecyclerView myRecyclerView;
     private ArrayList<Product> myDataset = new ArrayList<Product>();
     private static PayPalConfiguration config = new PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
             .clientId(Config.PAYPAL_CLIENT_ID);
 
     @Override
@@ -195,23 +198,24 @@ public class ProductDetailsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 7777) {
-            if (resultCode == RESULT_OK) {
-                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                if (confirmation != null) {
-                    try {
-                        String paymentDetails = confirmation.toJSONObject().toString(4);
-                        startActivity(new Intent(this, PaymentDetails.class)
-                                .putExtra("Payment Details", paymentDetails)
-                                .putExtra("Amount", String.valueOf(product.getPrice())));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED)
-                Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
-        } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
-            Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
+//        if (requestCode == 7777) {
+//            if (resultCode == RESULT_OK) {
+//                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+//                if (confirmation != null) {
+//                    try {
+//                        String paymentDetails = confirmation.toJSONObject().toString(4);
+//                        startActivity(new Intent(this, PaymentDetails.class)
+//                                .putExtra("Payment Details", paymentDetails)
+//                                .putExtra("Amount", String.valueOf(product.getPrice())));
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            } else if (resultCode == Activity.RESULT_CANCELED)
+//                Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+//        } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
+//            Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Payment Successful!", Toast.LENGTH_LONG).show();
     }
 
     @Override
