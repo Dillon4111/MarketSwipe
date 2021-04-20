@@ -1,21 +1,18 @@
 package com.example.marketswipe.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-
 import com.example.marketswipe.R;
 import com.example.marketswipe.models.ChatMessage;
-import com.example.marketswipe.models.Product;
 import com.example.marketswipe.utils.MyChatsAdapter;
-import com.example.marketswipe.utils.MyFavouritesAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +28,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
 
     private FirebaseUser mUser;
     private MyChatsAdapter mAdapter;
-    RecyclerView myRecyclerView;
+    private RecyclerView myRecyclerView;
     private List<String> chatIDs = new ArrayList<>();
     private ArrayList<ChatMessage> lastMessages = new ArrayList<>();
 

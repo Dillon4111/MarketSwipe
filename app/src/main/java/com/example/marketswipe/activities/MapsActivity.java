@@ -1,22 +1,18 @@
 package com.example.marketswipe.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-
 import com.example.marketswipe.R;
-import com.example.marketswipe.models.Card;
-import com.example.marketswipe.utils.DistanceCalculator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,8 +26,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private FirebaseUser mUser;
-    //private MarkerOptions marker = new MarkerOptions().title("");
-    private boolean found = false;
     private int markerCount = 0;
 
     @Override

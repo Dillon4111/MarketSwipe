@@ -22,9 +22,6 @@ public class LocationService extends Service {
     private static final int LOCATION_INTERVAL = 10;
     private static final float LOCATION_DISTANCE = 10f;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
 
@@ -37,8 +34,8 @@ public class LocationService extends Service {
         public void onLocationChanged(Location location) {
             FirebaseApp.initializeApp(LocationService.this);
 
-            mAuth = FirebaseAuth.getInstance();
-            mUser = mAuth.getCurrentUser();
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser mUser = mAuth.getCurrentUser();
             String uid = mUser.getUid();
 
             DatabaseReference databaseReference = FirebaseDatabase

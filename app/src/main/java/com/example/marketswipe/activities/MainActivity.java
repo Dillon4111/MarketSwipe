@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mSwipeView = null;
 
-        List<Product> productList = new ArrayList<>();
-
         final FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -210,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot categorySnapshot : snapshot.getChildren()) {
-                    //String category = categorySnapshot.child("Categories").getValue(String.class);
                     if (categorySnapshot != null) {
                         categories.add(categorySnapshot.getKey());
                     }
@@ -221,13 +218,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         android.R.layout.simple_spinner_item, categories) {
                     @Override
                     public boolean isEnabled(int position) {
-                        if (position == 0) {
-                            // Disable the first item from Spinner
-                            // First item will be use for hint
-                            return false;
-                        } else {
-                            return true;
-                        }
+                        // Disable the first item from Spinner
+                        // First item will be use for hint
+                        return position != 0;
                     }
 
                     @Override
@@ -287,21 +280,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        Toast.makeText(parent.getContext(),
-                "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
-                Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.search_spinner:
-                // do something
-                Log.d("SEARCH", "HELLOOOOOOO");
-                break;
-        }
+        // do something
 
         return super.onOptionsItemSelected(item);
     }
@@ -320,7 +302,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     final Product product = productSnapshot.getValue(Product.class);
 
                     if (!product.getUser_id().equals(uid)) {
-//                        final Double productLat, productLong, userLat, userLong;
                         product.setId(productSnapshot.getKey());
                         Log.d("MAIN PROD ID", product.getId());
                         DatabaseReference locationDB = FirebaseDatabase.getInstance().getReference("User_Location");
@@ -370,7 +351,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSwipeView.getBuilder().setSwipeType(SwipePlaceHolderView.SWIPE_TYPE_HORIZONTAL)
                 .setDisplayViewCount(4).setSwipeDecor(
                 new SwipeDecor()
-                        //.setPaddingTop(-50)
                         .setSwipeAnimFactor(0.75f)
                         .setSwipeRotationAngle(20)
                         .setPaddingLeft(30)
@@ -386,7 +366,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     final Product product = productSnapshot.getValue(Product.class);
 
                     if (!product.getUser_id().equals(uid) && product.getCategory().equals(category)) {
-//                        final Double productLat, productLong, userLat, userLong;
                         product.setId(productSnapshot.getKey());
                         Log.d("MAIN PROD ID", product.getId());
                         DatabaseReference locationDB = FirebaseDatabase.getInstance().getReference("User_Location");

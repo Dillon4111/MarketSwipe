@@ -51,7 +51,6 @@ public class SignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText signInEmail, signInPassword;
     private CallbackManager callbackManager;
-    private static final String EMAIL = "email";
     private LoginManager loginManager;
     private DatabaseReference db;
     private String TAG = "FB";
@@ -282,12 +281,12 @@ public class SignInActivity extends AppCompatActivity {
 
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
 
         if (!gps_enabled && !network_enabled) {

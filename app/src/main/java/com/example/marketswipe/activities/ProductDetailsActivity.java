@@ -1,32 +1,24 @@
 package com.example.marketswipe.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.emredavarci.noty.Noty;
 import com.example.marketswipe.R;
 import com.example.marketswipe.config.Config;
-import com.example.marketswipe.models.AmazonProduct;
 import com.example.marketswipe.models.GalleryImage;
 import com.example.marketswipe.models.Product;
-import com.example.marketswipe.utils.MyFavouritesAdapter;
 import com.example.marketswipe.utils.ProductSearch;
 import com.example.marketswipe.utils.WebResultsAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,36 +30,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mindorks.placeholderview.PlaceHolderView;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;;import org.json.JSONException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
-    Product product;
+    private Product product;
     private FirebaseUser mUser;
-    String chatID;
-    RecyclerView myRecyclerView;
+    private String chatID;
     private ArrayList<Product> myDataset = new ArrayList<Product>();
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
@@ -164,7 +145,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         StrictMode.setThreadPolicy(policy);
 
-        myRecyclerView = (RecyclerView) findViewById(R.id.webResultsRecyclerView);
+        RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.webResultsRecyclerView);
         myRecyclerView.setHasFixedSize(true);
         LinearLayoutManager myLayoutManager = new LinearLayoutManager(ProductDetailsActivity.this);
         myRecyclerView.setLayoutManager(myLayoutManager);

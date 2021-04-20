@@ -2,30 +2,17 @@ package com.example.marketswipe.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.marketswipe.R;
-import com.example.marketswipe.activities.FavouritesActivity;
-import com.example.marketswipe.activities.MainActivity;
-import com.example.marketswipe.activities.ProductDetailsActivity;
 import com.example.marketswipe.models.Product;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -57,8 +44,7 @@ public class WebResultsAdapter extends RecyclerView.Adapter<WebResultsAdapter.My
                                                              int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.favourite_row, parent, false);
-        MyViewHolder viewHolder = new MyViewHolder(itemView);
-        return viewHolder;
+        return new MyViewHolder(itemView);
     }
 
     @Override
@@ -94,8 +80,4 @@ public class WebResultsAdapter extends RecyclerView.Adapter<WebResultsAdapter.My
         return mylistvalues.size();
     }
 
-    public void filteredList(ArrayList<Product> products) {
-        mylistvalues = products;
-        notifyDataSetChanged();
-    }
 }

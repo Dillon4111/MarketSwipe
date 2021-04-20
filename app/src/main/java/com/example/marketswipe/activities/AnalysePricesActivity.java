@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 public class AnalysePricesActivity extends AppCompatActivity {
 
     private EditText analysePriceText;
-    private Button analysePriceButton;
     private String productName;
 
     @Override
@@ -45,12 +44,10 @@ public class AnalysePricesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_analyse_prices);
 
         analysePriceText = findViewById(R.id.analysePriceEditText);
-        analysePriceButton = findViewById(R.id.analysePricesButton);
+        Button analysePriceButton = findViewById(R.id.analysePricesButton);
         analysePriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//
-//
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -60,7 +57,7 @@ public class AnalysePricesActivity extends AppCompatActivity {
 
                         float ebayPrice = 0;
                         float amazonPrice = 0;
-                        float doneDealPrice = 0;
+                        float doneDealPrice;
 
                         productName = analysePriceText.getText().toString();
                         ProductSearch productSearch = new ProductSearch(productName);

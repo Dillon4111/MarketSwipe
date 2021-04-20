@@ -12,7 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PaymentDetails extends AppCompatActivity {
-    TextView txtId,txtAmount,txtStatus;
+    private TextView txtId,txtAmount,txtStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -3,26 +3,20 @@ package com.example.marketswipe.activities;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-
-import com.example.marketswipe.models.Product;
-import com.example.marketswipe.utils.MyFavouritesAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
-
 import com.example.marketswipe.R;
+import com.example.marketswipe.models.Product;
+import com.example.marketswipe.utils.MyFavouritesAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +36,7 @@ public class FavouritesActivity extends AppCompatActivity {
 
     private ArrayList<Product> myDataset= new ArrayList<Product>();
     private MyFavouritesAdapter mAdapter;
-    RecyclerView myRecyclerView;
+    private RecyclerView myRecyclerView;
 
     private List<String> productIds = new ArrayList<>();
 
@@ -135,7 +129,6 @@ public class FavouritesActivity extends AppCompatActivity {
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    //.addBackgroundColor(ContextCompat.getColor(UserProductsActivity.this, R.color.grey))
                     .addActionIcon(R.drawable.ic_baseline_delete_24)
                     .create()
                     .decorate();
@@ -151,7 +144,6 @@ public class FavouritesActivity extends AppCompatActivity {
             mAdapter.notifyDataSetChanged();
 
             final DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("Users");
-//            productDB.child(mUser.getUid()).child("Favourites").child(product.getId()).removeValue();
             userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -1,13 +1,5 @@
 package com.example.marketswipe.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +7,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.marketswipe.R;
 import com.example.marketswipe.models.Product;
-import com.example.marketswipe.models.User;
 import com.example.marketswipe.utils.MyFavouritesAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,14 +31,10 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class UserProductsActivity extends AppCompatActivity {
     private FirebaseUser mUser;
-    private FirebaseAuth mAuth;
 
     private ArrayList<Product> myDataset = new ArrayList<Product>();
     private MyFavouritesAdapter mAdapter;
-    RecyclerView myRecyclerView;
-
-    private DatabaseReference usersDB, productsDB;
-    private List<String> productIds = new ArrayList<>();
+    private RecyclerView myRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +42,7 @@ public class UserProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_products);
 
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
         myRecyclerView = (RecyclerView) findViewById(R.id.userProductsRecyclerView);
@@ -57,25 +50,7 @@ public class UserProductsActivity extends AppCompatActivity {
         LinearLayoutManager myLayoutManager = new LinearLayoutManager(this);
         myRecyclerView.setLayoutManager(myLayoutManager);
 
-//        usersDB = FirebaseDatabase.getInstance().getReference("Users");
-//        usersDB.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot noteSnapshot : snapshot.getChildren()) {
-//                    if(mUser.getUid().equals(noteSnapshot.getKey())) {
-//                        productIds = (List<String>) noteSnapshot.child("favourites").getValue();
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-        productsDB = FirebaseDatabase.getInstance().getReference("Products");
+        DatabaseReference productsDB = FirebaseDatabase.getInstance().getReference("Products");
         productsDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -130,7 +105,6 @@ public class UserProductsActivity extends AppCompatActivity {
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    //.addBackgroundColor(ContextCompat.getColor(UserProductsActivity.this, R.color.grey))
                     .addActionIcon(R.drawable.ic_baseline_delete_24)
                     .create()
                     .decorate();

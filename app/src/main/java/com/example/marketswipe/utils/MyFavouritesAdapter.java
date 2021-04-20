@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.marketswipe.R;
 import com.example.marketswipe.activities.ProductDetailsActivity;
 import com.example.marketswipe.models.Product;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -47,8 +46,7 @@ public class MyFavouritesAdapter extends RecyclerView.Adapter<MyFavouritesAdapte
                                                                int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.favourite_row, parent, false);
-        MyViewHolder viewHolder = new MyViewHolder(itemView);
-        return viewHolder;
+        return new MyViewHolder(itemView);
     }
 
     @Override
@@ -80,8 +78,4 @@ public class MyFavouritesAdapter extends RecyclerView.Adapter<MyFavouritesAdapte
         return mylistvalues.size();
     }
 
-    public void filteredList(ArrayList<Product> products) {
-        mylistvalues = products;
-        notifyDataSetChanged();
-    }
 }

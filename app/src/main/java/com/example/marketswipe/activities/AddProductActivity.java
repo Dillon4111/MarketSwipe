@@ -81,9 +81,9 @@ public class AddProductActivity extends AppCompatActivity {
 
         catSpinner = findViewById(R.id.cat_spinner);
         subCatSpinner = findViewById(R.id.subcat_spinner);
-        categories = new ArrayList<String>();
+        categories = new ArrayList<>();
         categories.add("*Select Category...");
-        subCategories = new ArrayList<String>();
+        subCategories = new ArrayList<>();
         subCategories.add("*Select Sub-Category...");
 
         DatabaseReference categoriesDB = FirebaseDatabase.getInstance().getReference("Categories");
@@ -91,7 +91,6 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot categorySnapshot : snapshot.getChildren()) {
-                    //String category = categorySnapshot.child("Categories").getValue(String.class);
                     if (categorySnapshot != null) {
                         categories.add(categorySnapshot.getKey());
                         Log.d("CatSnap", categorySnapshot.getKey());
@@ -142,8 +141,6 @@ public class AddProductActivity extends AppCompatActivity {
                     subCategories.clear();
                     subCategories.add("*Select Sub-Category...");
                     String selectedCategory = "Categories/" + parent.getItemAtPosition(position).toString();
-                    //String selectedCategory = "Categories/" +
-                    //       catSpinner.getSelectedItem().toString();
                     subCategoriesDB = FirebaseDatabase.getInstance().getReference(selectedCategory);
                     subCategoriesDB.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -151,7 +148,6 @@ public class AddProductActivity extends AppCompatActivity {
                             for (DataSnapshot subcategorySnapshot : snapshot.getChildren()) {
                                 if (subcategorySnapshot != null) {
                                     subCategories.add(subcategorySnapshot.getValue().toString());
-                                    //Log.d("SubCatSnap", "hello");
                                 }
                             }
                             ArrayAdapter<String> subCategoryAdapter = new ArrayAdapter<String>(AddProductActivity.this,
@@ -211,7 +207,7 @@ public class AddProductActivity extends AppCompatActivity {
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //This sets a textview to the current length
-                counter.setText(String.valueOf(s.length()) + "/250");
+                counter.setText(s.length() + "/250");
             }
 
             public void afterTextChanged(Editable s) {
