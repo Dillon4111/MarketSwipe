@@ -1,6 +1,5 @@
 package com.example.marketswipe.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;

@@ -76,7 +76,7 @@ public class ProductSearch {
                 .addHeader("x-rapidapi-host", "amazon-price1.p.rapidapi.com")
                 .build();
 
-        Response response = null;
+        Response response;
 
         try {
             response = client.newCall(request).execute();
@@ -84,7 +84,8 @@ public class ProductSearch {
             String responseBodyString = response.body().string();
             Log.d("AMAZON RESPONSE", responseBodyString);
 
-            List<AmazonProduct> resultList = new Gson().fromJson(responseBodyString, new TypeToken<ArrayList<AmazonProduct>>(){}.getType());
+            List<AmazonProduct> resultList = new Gson().fromJson(responseBodyString,
+                    new TypeToken<ArrayList<AmazonProduct>>(){}.getType());
 
             AmazonProduct amazonProduct = resultList.get(0);
 

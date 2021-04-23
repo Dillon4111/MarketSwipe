@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -231,6 +232,10 @@ public class SignInActivity extends AppCompatActivity {
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(SignInActivity.this, "Registration is successful",
                                                         Toast.LENGTH_LONG).show();
+                                                Location targetLocation = new Location("");
+                                                targetLocation.setLatitude(53.3498);
+                                                targetLocation.setLongitude(6.2603);
+                                                db.child("User_Location").child(user.getUid()).child("location").setValue(targetLocation);
                                                 checkLocationSettings();
                                             }
                                         })

@@ -3,6 +3,7 @@ package com.example.marketswipe.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -107,6 +108,12 @@ public class RegistrationActivity extends AppCompatActivity {
                                                                 Toast.LENGTH_LONG).show();
                                                         Intent intent = new Intent(RegistrationActivity.this, SignInActivity.class);
                                                         startActivity(intent);
+                                                        Location targetLocation = new Location("");
+                                                        targetLocation.setLatitude(53.3498);
+                                                        targetLocation.setLongitude(6.2603);
+                                                        db.child("User_Location").child(mUser.getUid()).child("location").setValue(targetLocation);
+                                                        mAuth.signOut();
+                                                        FirebaseAuth.getInstance().signOut();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {

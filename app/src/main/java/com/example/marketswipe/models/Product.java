@@ -9,11 +9,13 @@ import java.util.List;
 public class Product implements Serializable {
     private String id;
     private String user_id;
-    private int onlineprice_id;
     private String name, description, category, sub_category;
     private double price;
     private List<String> images;
-    private String gps_location, webUrl, webPrice, imageUrl, site;
+    private String webUrl;
+    private String webPrice;
+    private String imageUrl;
+    private String site;
 
     public Product() {
     }
@@ -51,14 +53,6 @@ public class Product implements Serializable {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
-    }
-
-    public int getOnlineprice_id() {
-        return onlineprice_id;
-    }
-
-    public void setOnlineprice_id(int onlineprice_id) {
-        this.onlineprice_id = onlineprice_id;
     }
 
     public String getName() {
@@ -107,14 +101,6 @@ public class Product implements Serializable {
 
     public void setImages(List<String> images) {
         this.images = images;
-    }
-
-    public String getGps_location() {
-        return gps_location;
-    }
-
-    public void setGps_location(String gps_location) {
-        this.gps_location = gps_location;
     }
 
     public String getWebUrl() {
